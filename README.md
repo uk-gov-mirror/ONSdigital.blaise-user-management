@@ -1,6 +1,6 @@
 # Blaise User Management
 
-[![codecov](https://codecov.io/gh/ONSdigital/telephone-operations-blaise-interface/branch/main/graph/badge.svg)](https://codecov.io/gh/ONSdigital/telephone-operations-blaise-interface)
+[![codecov](https://codecov.io/gh/ONSdigital/blaise-user-management/branch/main/graph/badge.svg)](https://codecov.io/gh/ONSdigital/telephone-operations-blaise-interface)
 
 
 Dashboard for managing Blaise users.
@@ -12,7 +12,7 @@ This project is a React application which when build is rendered by a Node.js ex
 ### Setup
 
 #### Prerequisites
-To run Blaise User Managemen locally, you'll need to have [Node installed](https://nodejs.org/en/), as well as [yarn](https://classic.yarnpkg.com/en/docs/install#mac-stable).
+To run Blaise User Management locally, you'll need to have [Node installed](https://nodejs.org/en/), as well as [yarn](https://classic.yarnpkg.com/en/docs/install#mac-stable).
 To have the list of instruments load on the page, you'll need to have [Blaise Instrument Checker](https://github.com/ONSdigital/blaise-instrument-checker) running locally
  or you can [port forward from a Kubernetes pod](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) running in a sandbox.  
 
