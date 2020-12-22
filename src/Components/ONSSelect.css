@@ -1,0 +1,13 @@
+.horizontal {
+    float: left;
+    margin-right: 5%;
+}
+
+.disabled{
+    background-color: #f0f0f0;
+}
+
+.small {
+    width: 100px;
+}
+
