@@ -149,7 +149,7 @@ server.post("/api/users", (req, res) => {
     // if (authenticationtoken === null) {
     //     return res.status(500).json("No Token");
     // }
-    data.serverParks = ["LocalDevelopment"];
+    data.serverParks = [data.defaultServerPark];
     axios({
         method: "POST",
         headers: configHeaders,

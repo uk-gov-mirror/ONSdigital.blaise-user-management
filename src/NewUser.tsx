@@ -72,8 +72,8 @@ function NewUser() {
         formData.append("name", username);
         formData.append("password", password);
         formData.append("role", role);
-        formData.append("serverParks", "['LocalDevelopment']");
-        formData.append("defaultServerPark", "LocalDevelopment");
+        formData.append("serverParks", `['${serverPark}']`);
+        formData.append("defaultServerPark", serverPark);
         // formData.append("role_id", role);
 
         setButtonLoading(true);
