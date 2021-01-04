@@ -16,12 +16,21 @@ interface Option {
     permissions: string[]
 }
 
+interface ServerPark {
+    name: string
+}
+
+interface Role {
+    name: string
+}
+
 function NewUser() {
     const [buttonLoading, setButtonLoading] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [role, setRole] = useState<string>("");
+    const [serverPark, setServerPark] = useState<string>("");
     const [message, setMessage] = useState<string>("");
     const [redirect, setRedirect] = useState<boolean>(false);
 
@@ -41,6 +50,11 @@ function NewUser() {
 
         if (role === "") {
             setMessage("Role needs to be set");
+            return;
+        }
+
+        if (serverPark === "") {
+            setMessage("ServerPark needs to be set");
             return;
         }
 
@@ -98,10 +112,13 @@ function NewUser() {
 
     useEffect(() => {
         getRoleList();
+        getServerParkList();
     }, []);
 
-    const [list, setList] = useState<[]>([]);
+    const [list, setList] = useState<Role[]>([]);
     const [listError, setListError] = useState<listError>({error: false, message: "Loading ..."});
+    const [serverParkList, setServerParkList] = useState<ServerPark[]>([]);
+    const [serverParkListError, setServerParkListError] = useState<listError>({error: false, message: "Loading ..."});
 
 
     function getRoleList() {
@@ -110,11 +127,12 @@ function NewUser() {
             .then((r: Response) => {
                 if (r.status === 200) {
                     r.json()
-                        .then((json: []) => {
+                        .then((json: Role[]) => {
                                 console.log("Retrieved role list, " + json.length + " items/s");
                                 isDevEnv() && console.log(json);
                                 setList(json);
                                 setListError({error: false, message: ""});
+                                setRole(json[0].name);
                             }
                         ).catch(() => {
                         console.error("Unable to read json from response");
@@ -127,6 +145,34 @@ function NewUser() {
             }).catch(() => {
                 console.error("Failed to retrieve instrument list");
                 setListError({error: true, message: "Unable to load surveys"});
+            }
+        );
+    }
+
+    function getServerParkList() {
+        fetch("/api/serverparks", {
+        })
+            .then((r: Response) => {
+                if (r.status === 200) {
+                    r.json()
+                        .then((json: ServerPark[]) => {
+                                console.log("Retrieved serverparks list, " + json.length + " items/s");
+                                isDevEnv() && console.log(json);
+                                setServerParkList(json);
+                                setServerPark(json[0].name);
+                                setServerParkListError({error: false, message: ""});
+                            }
+                        ).catch(() => {
+                        console.error("Unable to read json from response");
+                        setServerParkListError({error: true, message: "Unable to load surveys"});
+                    });
+                } else {
+                    console.error("Failed to retrieve instrument list, status " + r.status);
+                    setServerParkListError({error: true, message: "Unable to load surveys"});
+                }
+            }).catch(() => {
+                console.error("Failed to retrieve instrument list");
+            setServerParkListError({error: true, message: "Unable to load surveys"});
             }
         );
     }
@@ -181,7 +227,18 @@ function NewUser() {
                     </label>
                     <select value={role} id="select" name="select" className="input input--select " onChange={(e) => setRole(e.target.value)}>
                         {
-                            list.map((option: Option) => {
+                            list.map((option: Role) => {
+                                return (<option key={option.name} value={option.name}>{option.name}</option>);
+                            })
+                        }
+                    </select>
+                </p>
+                <p className="field">
+                    <label className="label" htmlFor="select">Role
+                    </label>
+                    <select value={serverPark} id="select" name="select" className="input input--select " onChange={(e) => setServerPark(e.target.value)}>
+                        {
+                            serverParkList.map((option: ServerPark) => {
                                 return (<option key={option.name} value={option.name}>{option.name}</option>);
                             })
                         }

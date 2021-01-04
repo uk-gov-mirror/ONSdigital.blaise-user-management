@@ -3,6 +3,9 @@ import {Link} from "react-router-dom";
 import {User} from "../../Interfaces";
 import {ONSPanel} from "./ONSPanel";
 import {useLocation} from "react-router-dom";
+import ONSErrorPanel from "./ONSDesignSystem/ONSErrorPanel";
+import {DefaultErrorBoundary} from "./ErrorHandling/DefaultErrorBoundary";
+import ExternalLink from "./ONSDesignSystem/ExternalLink";
 
 interface listError {
     error: boolean,
@@ -12,12 +15,15 @@ interface listError {
 interface Props {
     list: User[],
     listError: listError
-    getUsers: any;
+    getUsers: any
+    externalCATIUrl: string
+    updatePanel: any
+    panel: Panel
 }
 
 interface Panel {
     visible: boolean
-    message:string
+    message: string
     status: string
 }
 
@@ -27,26 +33,35 @@ interface location {
 }
 
 function UserList(props: Props): ReactElement {
-    const {list, listError, getUsers} = props;
-    const [panel, setPanel] = useState<Panel>({visible: false, message: "", status: "info"});
-    const location = useLocation();
-    const {updatedPanel} = (location as location).state || { updatedPanel: null };
+    const {list, listError, getUsers, externalCATIUrl, updatePanel, panel} = props;
+    const {state}: location = useLocation();
+    const {updatedPanel} = state || {updatedPanel: null};
     useEffect(() => {
-        if (updatedPanel !== null) {
-            console.log(updatedPanel);
-            setPanel(updatedPanel);
+        if (updatedPanel === null) {
+            return;
+        }
+        if (updatedPanel.message !== panel.message) {
+            updatePanel(updatedPanel.visible, updatedPanel.message, updatedPanel.status);
             getUsers();
         }
-    }, updatedPanel);
+
+    }, []);
 
 
     return <>
-        <h2>Users</h2>
-        
-        <ONSPanel label={""} hidden={!panel.visible} status={panel.status}>
-            <p>{panel.message}</p>
-        </ONSPanel>
-        
+        <h1 className="u-mt-m">Users</h1>
+        <p className="u-mt-m">
+            <Link to={"/user"}>
+                Create new user
+            </Link>
+        </p>
+        <p className="u-mt-m">
+            <ExternalLink text={"Link to CATI dashboard"}
+                          link={externalCATIUrl}
+                          id={"cati-dashboard"}/>
+        </p>
+        {listError.error && <ONSErrorPanel/>}
+
         <table id="user-table" className="table u-mt-m">
             <thead className="table__head u-mt-m">
             <tr className="table__row">

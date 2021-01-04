@@ -45,6 +45,22 @@ server.use(
 // Load api Instruments routes from InstrumentRouter
 server.use("/api", InstrumentRouter(BLAISE_API_URL, VM_EXTERNAL_WEB_URL));
 
+server.get("/api/serverparks", async function (req: Request, res: Response) {
+    axios.get("http://" + BLAISE_API_URL + "/api/v1/serverparks")
+        .then(function (response: AxiosResponse) {
+            const instruments: Instrument[] = response.data;
+            // Add interviewing link and date of instrument to array objects
+
+            return res.json(instruments);
+        })
+        .catch(function (error) {
+            // handle error
+            console.error("Failed to retrieve instrument list");
+            console.error(error);
+            return res.status(500).json(error);
+        });
+});
+
 server.get("/api/roles", async function (req: Request, res: Response) {
     axios.get("http://" + BLAISE_API_URL + "/api/v1/roles")
         .then(function (response: AxiosResponse) {

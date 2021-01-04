@@ -109,3 +109,4 @@ You can run this service in a container, the Dockerfile is setup to:
 - Build the React project for serving by express
 - Run Yarn Start on startup
 
+gcloud builds submit --substitutions=_PROJECT_ID=ons-blaise-v2-dev,_VM_INTERNAL_URL=test,_VM_EXTERNAL_WEB_URL=dev-web.social-surveys.gcp.onsdigital.uk,_VM_EXTERNAL_CLIENT_URL=test,_BLAISE_API_URL=restapi-container.europe-west2-a.c.ons-blaise-v2-dev.internal:90

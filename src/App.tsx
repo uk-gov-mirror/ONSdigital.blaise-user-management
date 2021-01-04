@@ -9,7 +9,7 @@ import {isDevEnv} from "./Functions";
 import {
     Switch,
     Route,
-    Link
+    Link, Redirect
 } from "react-router-dom";
 import InstrumentList from "./Components/InstrumentList";
 import UserList from "./Components/UserList";
@@ -18,7 +18,14 @@ import {ErrorBoundary} from "./Components/ErrorHandling/ErrorBoundary";
 import NewUser from "./NewUser";
 import ChangePassword from "./ChangePassword";
 import DeleteUser from "./DeleteUser";
+import SignIn from "./SignIn";
+import {ONSPanel} from "./Components/ONSPanel";
 
+interface Panel {
+    visible: boolean
+    message:string
+    status: string
+}
 
 interface listError {
     error: boolean,
@@ -38,6 +45,13 @@ function App(): ReactElement {
 
     const [externalClientUrl, setExternalClientUrl] = useState<string>("External URL should be here");
     const [externalCATIUrl, setExternalCATIUrl] = useState<string>("/Blaise");
+    const [panel, setPanel] = useState<Panel>({visible: false, message: "", status: "info"});
+
+    const updatePanel = (visible = false, message = "", status = "info") => {
+        setPanel(
+            {visible: visible, message: message, status: status}
+        );
+    };
 
 
     useEffect(function retrieveVariables() {
@@ -53,6 +67,33 @@ function App(): ReactElement {
     useEffect(() => {
         getList();
     }, []);
+
+    const [authentication, setAuthentication] = useState(null);
+    // A wrapper for <Route> that redirects to the login
+    //screen if you're not yet authenticated.
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // eslint-disable-next-line react/prop-types
+    function PrivateRoute({children, ...rest}) {
+        return (
+            <Route
+                {...rest}
+                render={({location}) =>
+                    authentication !== null ? (
+                        children
+                    ) : (
+                        <Redirect
+                            to={{
+                                pathname: "/signin",
+                                state: {from: location}
+                            }}
+                        />
+                    )
+                }
+            />
+        );
+    }
 
     function getList() {
         fetch("/api/users")
@@ -85,48 +126,43 @@ function App(): ReactElement {
     }
 
 
+
+
     return (
         <>
             <BetaBanner/>
             <Header title={"Blaise User Management"}/>
             <div style={divStyle} className="page__container container">
                 <main id="main-content" className="page__main">
+                    <ONSPanel label={""} hidden={!panel.visible} status={panel.status}>
+                        <p>{panel.message}</p>
+                    </ONSPanel>
                     <DefaultErrorBoundary>
-                        <h1>Interviewing</h1>
-                        <p>
-                            This page provides information on active questionnaires with corresponding links that
-                            redirect to specific areas of CATI dashboard.
-                        </p>
-                        <p>
-                            Please note, the table containing information on active questionnaires may
-                            take a few seconds to load.
-                        </p>
-                        {listError.error && <ONSErrorPanel/>}
-                        <p className="u-mt-m">
-                            <ExternalLink text={"Link to CATI dashboard"}
-                                          link={externalCATIUrl}
-                                          id={"cati-dashboard"}/>
-                        </p>
-                        <p className="u-mt-m">
-                            <Link to={"/user"}>
-                                Create new user
-                            </Link>
-                        </p>
                         <Switch>
-                            <Route path={"/user/changepassword/:user"}>
+                            <PrivateRoute path={"/user/changepassword/:user"}>
                                 <ChangePassword/>
-                            </Route>
-                            <Route path={"/user/delete/:user"}>
+                            </PrivateRoute>
+                            <PrivateRoute path={"/user/delete/:user"}>
                                 <DeleteUser/>
-                            </Route>
-                            <Route path={"/user"}>
+                            </PrivateRoute>
+                            <PrivateRoute path={"/user"}>
                                 <NewUser/>
-                            </Route>
-                            <Route path="/">
+                            </PrivateRoute>
+                            <Route path="/signin">
                                 <ErrorBoundary errorMessageText={"Unable to load survey table correctly"}>
-                                    <UserList list={surveys} listError={listError} getUsers={getList}/>
+                                    <SignIn setAuthenticationToken={setAuthentication}/>
                                 </ErrorBoundary>
                             </Route>
+                            <PrivateRoute path="/">
+                                <ErrorBoundary errorMessageText={"Unable to load survey table correctly"}>
+                                    <UserList list={surveys}
+                                              listError={listError}
+                                              getUsers={getList}
+                                              externalCATIUrl={externalCATIUrl}
+                                              updatePanel={updatePanel}
+                                              panel={panel}/>
+                                </ErrorBoundary>
+                            </PrivateRoute>
                         </Switch>
                     </DefaultErrorBoundary>
                 </main>
