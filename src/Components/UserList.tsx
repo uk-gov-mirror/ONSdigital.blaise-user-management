@@ -50,11 +50,18 @@ function UserList(props: Props): ReactElement {
 
     return <>
         <h1 className="u-mt-m">Users</h1>
-        <p className="u-mt-m">
-            <Link to={"/user"}>
-                Create new user
-            </Link>
-        </p>
+        <ul className="list list--bare list--inline ">
+            <li className="list__item ">
+                <Link to={"/user"}>
+                    Create new user
+                </Link>
+            </li>
+            <li className="list__item ">
+                <Link to={"/role"}>
+                    Create new role
+                </Link>
+            </li>
+        </ul>
         <p className="u-mt-m">
             <ExternalLink text={"Link to CATI dashboard"}
                           link={externalCATIUrl}
@@ -122,7 +129,8 @@ function UserList(props: Props): ReactElement {
             }
             </tbody>
         </table>
-    </>;
+    </>
+        ;
 }
 
 export default UserList;

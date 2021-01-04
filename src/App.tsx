@@ -20,6 +20,7 @@ import ChangePassword from "./ChangePassword";
 import DeleteUser from "./DeleteUser";
 import SignIn from "./SignIn";
 import {ONSPanel} from "./Components/ONSPanel";
+import NewRole from "./NewRole";
 
 interface Panel {
     visible: boolean
@@ -147,6 +148,9 @@ function App(): ReactElement {
                             </PrivateRoute>
                             <PrivateRoute path={"/user"}>
                                 <NewUser/>
+                            </PrivateRoute>
+                            <PrivateRoute path={"/role"}>
+                                <NewRole/>
                             </PrivateRoute>
                             <Route path="/signin">
                                 <ErrorBoundary errorMessageText={"Unable to load survey table correctly"}>
