@@ -234,7 +234,7 @@ function NewUser() {
                     </select>
                 </p>
                 <p className="field">
-                    <label className="label" htmlFor="select">Role
+                    <label className="label" htmlFor="select">Server park
                     </label>
                     <select value={serverPark} id="select" name="select" className="input input--select " onChange={(e) => setServerPark(e.target.value)}>
                         {
