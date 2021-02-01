@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
-import {ONSPasswordInput} from "./Components/ONSPasswordInput";
+import {ONSPasswordInput} from "./Components/ONSDesignSystem/ONSPasswordInput";
 import {isDevEnv} from "./Functions";
-import {ONSButton} from "./Components/ONSButton";
-import {ONSTextInput} from "./Components/ONSTextInput";
+import {ONSButton} from "./Components/ONSDesignSystem/ONSButton";
+import {ONSTextInput} from "./Components/ONSDesignSystem/ONSTextInput";
 
 interface listError {
     error: boolean,

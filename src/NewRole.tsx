@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
 import {isDevEnv} from "./Functions";
-import {ONSButton} from "./Components/ONSButton";
-import {ONSTextInput} from "./Components/ONSTextInput";
+import {ONSButton} from "./Components/ONSDesignSystem/ONSButton";
+import {ONSTextInput} from "./Components/ONSDesignSystem/ONSTextInput";
 
 
 function NewRole() {
