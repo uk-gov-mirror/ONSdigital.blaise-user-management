@@ -1,7 +1,6 @@
 import React, {ReactElement, useEffect, useState} from "react";
 import Header from "./Components/ONSDesignSystem/Header";
 import BetaBanner from "./Components/ONSDesignSystem/BetaBanner";
-import ExternalLink from "./Components/ONSDesignSystem/ExternalLink";
 import {DefaultErrorBoundary} from "./Components/ErrorHandling/DefaultErrorBoundary";
 import Footer from "./Components/ONSDesignSystem/Footer";
 import ONSErrorPanel from "./Components/ONSDesignSystem/ONSErrorPanel";
@@ -9,9 +8,8 @@ import {isDevEnv} from "./Functions";
 import {
     Switch,
     Route,
-    Link, Redirect
+    Redirect
 } from "react-router-dom";
-import InstrumentList from "./Components/InstrumentList";
 import UserList from "./Components/UserList";
 import {User} from "../Interfaces";
 import {ErrorBoundary} from "./Components/ErrorHandling/ErrorBoundary";
@@ -19,18 +17,14 @@ import NewUser from "./NewUser";
 import ChangePassword from "./ChangePassword";
 import DeleteUser from "./DeleteUser";
 import SignIn from "./SignIn";
-import {ONSPanel} from "./Components/ONSPanel";
 import NewRole from "./NewRole";
+import {getAllUsers} from "./utilities/http";
+import { ONSPanel } from "./Components/ONSDesignSystem/ONSPanel";
 
 interface Panel {
     visible: boolean
     message:string
     status: string
-}
-
-interface listError {
-    error: boolean,
-    message: string
 }
 
 interface window extends Window {
@@ -62,17 +56,14 @@ function App(): ReactElement {
             process.env.REACT_APP_CATI_DASHBOARD_URL || externalCATIUrl : (window as unknown as window).CATI_DASHBOARD_URL);
     }, [externalClientUrl, externalCATIUrl]);
 
-    const [surveys, setSurveys] = useState<User[]>([]);
-    const [listError, setListError] = useState<listError>({error: false, message: "Loading ..."});
-
-    useEffect(() => {
-        getList();
-    }, []);
+    const [users, setUsers] = useState<User[]>([]);
+    const [listError, setListError] = useState<string>("Loading ...");
 
     const [authentication, setAuthentication] = useState(null);
-    // A wrapper for <Route> that redirects to the login
-    //screen if you're not yet authenticated.
 
+
+    // A wrapper for <Route> that redirects to the login
+    // screen if you're not yet authenticated.
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     // eslint-disable-next-line react/prop-types
@@ -96,34 +87,25 @@ function App(): ReactElement {
         );
     }
 
-    function getList() {
-        fetch("/api/users")
-            .then((r: Response) => {
-                if (r.status !== 200) {
-                    throw r.status + " - " + r.statusText;
-                }
-                r.json()
-                    .then((json: User[]) => {
-                        if (!Array.isArray(json)) {
-                            throw "Json response is not a list";
-                        }
-                        console.log("Retrieved instrument list, " + json.length + " items/s");
-                        isDevEnv() && console.log(json);
-                        setSurveys(json);
-                        setListError({error: false, message: ""});
+    useEffect(() => {
+        getUserList().then(() => console.log("Call getUserList Complete"));
+    }, []);
 
-                        // If the list is empty then show this message in the list
-                        if (json.length === 0) setListError({error: false, message: "No active surveys found."});
-                    })
-                    .catch((error) => {
-                        isDevEnv() && console.error("Unable to read json from response, error: " + error);
-                        setListError({error: true, message: "Unable to load surveys"});
-                    });
-            }).catch((error) => {
-                isDevEnv() && console.error("Failed to retrieve instrument list, error: " + error);
-                setListError({error: true, message: "Unable to load surveys"});
-            }
-        );
+    async function getUserList() {
+        setUsers([]);
+
+        const [success, instrumentList] = await getAllUsers();
+
+        if (!success) {
+            setListError("Unable to load questionnaires");
+            return;
+        }
+
+        if (instrumentList.length === 0) {
+            setListError("No installed questionnaires found.");
+        }
+
+        setUsers(instrumentList);
     }
 
 
@@ -158,10 +140,10 @@ function App(): ReactElement {
                                 </ErrorBoundary>
                             </Route>
                             <PrivateRoute path="/">
-                                <ErrorBoundary errorMessageText={"Unable to load survey table correctly"}>
-                                    <UserList list={surveys}
+                                <ErrorBoundary errorMessageText={"Unable to load user table correctly"}>
+                                    <UserList list={users}
                                               listError={listError}
-                                              getUsers={getList}
+                                              getUsers={getUserList}
                                               externalCATIUrl={externalCATIUrl}
                                               updatePanel={updatePanel}
                                               panel={panel}/>

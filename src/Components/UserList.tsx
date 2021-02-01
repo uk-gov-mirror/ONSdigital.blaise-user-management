@@ -1,20 +1,13 @@
-import React, {ReactElement, useEffect, useState} from "react";
+import React, {ReactElement, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {User} from "../../Interfaces";
-import {ONSPanel} from "./ONSPanel";
 import {useLocation} from "react-router-dom";
 import ONSErrorPanel from "./ONSDesignSystem/ONSErrorPanel";
-import {DefaultErrorBoundary} from "./ErrorHandling/DefaultErrorBoundary";
 import ExternalLink from "./ONSDesignSystem/ExternalLink";
-
-interface listError {
-    error: boolean,
-    message: string
-}
 
 interface Props {
     list: User[],
-    listError: listError
+    listError: string
     getUsers: any
     externalCATIUrl: string
     updatePanel: any
@@ -67,7 +60,7 @@ function UserList(props: Props): ReactElement {
                           link={externalCATIUrl}
                           id={"cati-dashboard"}/>
         </p>
-        {listError.error && <ONSErrorPanel/>}
+        {listError.includes("Unable") && <ONSErrorPanel/>}
 
         <table id="user-table" className="table u-mt-m">
             <thead className="table__head u-mt-m">
@@ -122,8 +115,8 @@ function UserList(props: Props): ReactElement {
                     })
                     :
                     <tr>
-                        <td className="table__cell " colSpan={3}>
-                            {listError.message}
+                        <td className="table__cell " colSpan={6}>
+                            {listError}
                         </td>
                     </tr>
             }

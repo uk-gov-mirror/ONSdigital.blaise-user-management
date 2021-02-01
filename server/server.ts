@@ -3,11 +3,9 @@ import axios, {AxiosResponse} from "axios";
 import path from "path";
 import ejs from "ejs";
 import dotenv from "dotenv";
-import InstrumentRouter from "./Instuments";
 import {getEnvironmentVariables} from "./Config";
 import {Instrument, Survey} from "../Interfaces";
-import Functions from "./Functions";
-import _ from "lodash";
+
 
 // @ts-ignore
 import multer from "multer";
@@ -42,9 +40,6 @@ server.use(
     express.static(path.join(__dirname, `${buildFolder}/static`)),
 );
 
-// Load api Instruments routes from InstrumentRouter
-server.use("/api", InstrumentRouter(BLAISE_API_URL, VM_EXTERNAL_WEB_URL));
-
 server.get("/api/serverparks", async function (req: Request, res: Response) {
     axios.get("http://" + BLAISE_API_URL + "/api/v1/serverparks")
         .then(function (response: AxiosResponse) {
@@ -62,7 +57,7 @@ server.get("/api/serverparks", async function (req: Request, res: Response) {
 });
 
 server.get("/api/roles", async function (req: Request, res: Response) {
-    axios.get("http://" + BLAISE_API_URL + "/api/v1/roles")
+    axios.get("http://" + BLAISE_API_URL + "/api/v1/userroles")
         .then(function (response: AxiosResponse) {
             const instruments: Instrument[] = response.data;
             // Add interviewing link and date of instrument to array objects
@@ -179,7 +174,7 @@ server.post("/api/roles", (req, res) => {
     axios({
         method: "POST",
         headers: configHeaders,
-        url: "http://" + BLAISE_API_URL + "/api/v1/roles",
+        url: "http://" + BLAISE_API_URL + "/api/v1/userroles",
         data: data,
     })
         .then(function (response) {
