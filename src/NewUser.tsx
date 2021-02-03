@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
-import {ONSPasswordInput} from "./Components/ONSDesignSystem/ONSPasswordInput";
 import {isDevEnv} from "./Functions";
-import {ONSButton} from "./Components/ONSDesignSystem/ONSButton";
-import {ONSTextInput} from "./Components/ONSDesignSystem/ONSTextInput";
+import {ONSTextInput, ONSButton, ONSPasswordInput} from "blaise-design-system-react-components";
 
 interface listError {
     error: boolean,
@@ -212,8 +210,7 @@ function NewUser() {
                 {message}
             </p>
             <form onSubmit={() => createNewUser()}>
-                <ONSTextInput label={"Username"}
-                              autoFocus={true}
+                <ONSTextInput autoFocus={true}
                               value={username}
                               onChange={(e) => setUsername(e.target.value)}/>
                 <ONSPasswordInput label={"Password"}

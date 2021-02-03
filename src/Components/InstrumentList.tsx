@@ -1,4 +1,4 @@
-import ExternalLink from "./ONSDesignSystem/ExternalLink";
+import {ExternalLink} from "blaise-design-system-react-components";
 import React, {ReactElement} from "react";
 import {Link, useParams} from "react-router-dom";
 import {Instrument, Survey} from "../../Interfaces";

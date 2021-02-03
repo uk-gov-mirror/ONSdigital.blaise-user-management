@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Link, Redirect, useParams} from "react-router-dom";
-import {ONSPasswordInput} from "./Components/ONSDesignSystem/ONSPasswordInput";
 import {isDevEnv} from "./Functions";
-import {ONSButton} from "./Components/ONSDesignSystem/ONSButton";
-import {ONSTextInput} from "./Components/ONSDesignSystem/ONSTextInput";
+import {ONSButton} from "blaise-design-system-react-components";
+
 
 interface ReturnPanel {
     visible: boolean

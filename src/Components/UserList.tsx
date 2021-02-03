@@ -2,8 +2,7 @@ import React, {ReactElement, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {User} from "../../Interfaces";
 import {useLocation} from "react-router-dom";
-import ONSErrorPanel from "./ONSDesignSystem/ONSErrorPanel";
-import ExternalLink from "./ONSDesignSystem/ExternalLink";
+import {ExternalLink, ONSErrorPanel} from "blaise-design-system-react-components";
 
 interface Props {
     list: User[],

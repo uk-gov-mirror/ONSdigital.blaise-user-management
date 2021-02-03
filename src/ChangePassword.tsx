@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {Link, Redirect, useParams} from "react-router-dom";
-import {ONSPasswordInput} from "./Components/ONSDesignSystem/ONSPasswordInput";
 import {isDevEnv} from "./Functions";
-import {ONSButton} from "./Components/ONSDesignSystem/ONSButton";
+import {ONSButton, ONSPasswordInput} from "blaise-design-system-react-components";
+
 
 
 interface Parmas {

@@ -1,9 +1,8 @@
 import React, {EventHandler, useState} from "react";
 import {Link, Redirect, useParams, useLocation} from "react-router-dom";
-import {ONSPasswordInput} from "./Components/ONSDesignSystem/ONSPasswordInput";
 import {isDevEnv} from "./Functions";
-import {ONSButton} from "./Components/ONSDesignSystem/ONSButton";
-import {ONSTextInput} from "./Components/ONSDesignSystem/ONSTextInput";
+import {ONSTextInput, ONSButton, ONSPasswordInput} from "blaise-design-system-react-components";
+
 
 interface Props {
     setAuthenticationToken: any

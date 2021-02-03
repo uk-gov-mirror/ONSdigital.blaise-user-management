@@ -1,9 +1,7 @@
 import React, {ReactElement, useEffect, useState} from "react";
-import Header from "./Components/ONSDesignSystem/Header";
-import BetaBanner from "./Components/ONSDesignSystem/BetaBanner";
+// import Header from "./Components/ONSDesignSystem/Header";
 import {DefaultErrorBoundary} from "./Components/ErrorHandling/DefaultErrorBoundary";
-import Footer from "./Components/ONSDesignSystem/Footer";
-import ONSErrorPanel from "./Components/ONSDesignSystem/ONSErrorPanel";
+// import Footer from "./Components/ONSDesignSystem/Footer";
 import {isDevEnv} from "./Functions";
 import {
     Switch,
@@ -19,7 +17,8 @@ import DeleteUser from "./DeleteUser";
 import SignIn from "./SignIn";
 import NewRole from "./NewRole";
 import {getAllUsers} from "./utilities/http";
-import { ONSPanel } from "./Components/ONSDesignSystem/ONSPanel";
+
+import {NotProductionWarning, Footer, Header, ONSPanel, BetaBanner} from "blaise-design-system-react-components";
 
 interface Panel {
     visible: boolean
@@ -114,10 +113,11 @@ function App(): ReactElement {
     return (
         <>
             <BetaBanner/>
-            <Header title={"Blaise User Management"}/>
+            <NotProductionWarning/>
+            <Header title={"Blaise User Management"} />
             <div style={divStyle} className="page__container container">
                 <main id="main-content" className="page__main">
-                    <ONSPanel label={""} hidden={!panel.visible} status={panel.status}>
+                    <ONSPanel hidden={!panel.visible} status={panel.status}>
                         <p>{panel.message}</p>
                     </ONSPanel>
                     <DefaultErrorBoundary>
@@ -153,7 +153,7 @@ function App(): ReactElement {
                     </DefaultErrorBoundary>
                 </main>
             </div>
-            <Footer external_client_url={externalClientUrl}/>
+            <Footer/>
         </>
     );
 }
