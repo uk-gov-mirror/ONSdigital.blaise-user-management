@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link, Redirect, useParams} from "react-router-dom";
-import {isDevEnv} from "./Functions";
+import {isDevEnv} from "../Functions";
 import {ONSButton} from "blaise-design-system-react-components";
 
 

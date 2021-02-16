@@ -1,26 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
-import {isDevEnv} from "./Functions";
+import {isDevEnv} from "../Functions";
 import {ONSTextInput, ONSButton, ONSPasswordInput} from "blaise-design-system-react-components";
+import {getAllRoles} from "../utilities/http";
+import {Role} from "../../Interfaces";
 
 interface listError {
     error: boolean,
     message: string
 }
 
-interface Option {
-    description: string
-    name: string
-    permissions: string[]
-}
-
 interface ServerPark {
     name: string
 }
 
-interface Role {
-    name: string
-}
 
 function NewUser() {
     const [buttonLoading, setButtonLoading] = useState<boolean>(false);
@@ -61,8 +54,8 @@ function NewUser() {
             "name": username,
             "role": "string",
             "serverParks": [
-            "string"
-        ],
+                "string"
+            ],
             "defaultServerPark": "string"
         };
 
@@ -109,47 +102,34 @@ function NewUser() {
     }
 
     useEffect(() => {
-        getRoleList();
+        getRoleList().then(() => console.log("Call getRoleList Complete"));
         getServerParkList();
     }, []);
 
-    const [list, setList] = useState<Role[]>([]);
-    const [listError, setListError] = useState<listError>({error: false, message: "Loading ..."});
+    const [roleList, setRoleList] = useState<Role[]>([]);
+    const [listError, setListError] = useState<string>("");
     const [serverParkList, setServerParkList] = useState<ServerPark[]>([]);
     const [serverParkListError, setServerParkListError] = useState<listError>({error: false, message: "Loading ..."});
 
+    async function getRoleList() {
+        setRoleList([]);
 
-    function getRoleList() {
-        fetch("/api/roles", {
-        })
-            .then((r: Response) => {
-                if (r.status === 200) {
-                    r.json()
-                        .then((json: Role[]) => {
-                                console.log("Retrieved role list, " + json.length + " items/s");
-                                isDevEnv() && console.log(json);
-                                setList(json);
-                                setListError({error: false, message: ""});
-                                setRole(json[0].name);
-                            }
-                        ).catch(() => {
-                        console.error("Unable to read json from response");
-                        setListError({error: true, message: "Unable to load surveys"});
-                    });
-                } else {
-                    console.error("Failed to retrieve instrument list, status " + r.status);
-                    setListError({error: true, message: "Unable to load surveys"});
-                }
-            }).catch(() => {
-                console.error("Failed to retrieve instrument list");
-                setListError({error: true, message: "Unable to load surveys"});
-            }
-        );
+        const [success, roleList] = await getAllRoles();
+
+        if (!success) {
+            setListError("Unable to load roles");
+            return;
+        }
+
+        if (roleList.length === 0) {
+            setListError("No roles found.");
+        }
+
+        setRoleList(roleList);
     }
 
     function getServerParkList() {
-        fetch("/api/serverparks", {
-        })
+        fetch("/api/serverparks", {})
             .then((r: Response) => {
                 if (r.status === 200) {
                     r.json()
@@ -170,36 +150,17 @@ function NewUser() {
                 }
             }).catch(() => {
                 console.error("Failed to retrieve instrument list");
-            setServerParkListError({error: true, message: "Unable to load surveys"});
+                setServerParkListError({error: true, message: "Unable to load surveys"});
             }
         );
     }
-
-    // function makeRoleOptionList(list: []) {
-    //     let optionList: [] = []
-    //
-    //     console.log(list)
-    //
-    //     list.forEach((item: any) => {
-    //         console.log(item)
-    //         let name = {
-    //             label: item.name,
-    //             value: item.id,
-    //             id: item.id
-    //         }
-    //         // @ts-ignore
-    //         optionList.push(name)
-    //     });
-    //
-    //     setOptionList(optionList)
-    // }
 
     return (
         <>
             {
                 redirect && <Redirect to={{
                     pathname: "/",
-                    state: {updatedPanel: {visible: true, message: "User " + username + " created", status: "success"} }
+                    state: {updatedPanel: {visible: true, message: "User " + username + " created", status: "success"}}
                 }}/>
             }
             <p>
@@ -222,9 +183,10 @@ function NewUser() {
                 <p className="field">
                     <label className="label" htmlFor="select">Role
                     </label>
-                    <select value={role} id="select" name="select" className="input input--select " onChange={(e) => setRole(e.target.value)}>
+                    <select value={role} id="select" name="select" className="input input--select "
+                            onChange={(e) => setRole(e.target.value)}>
                         {
-                            list.map((option: Role) => {
+                            roleList.map((option: Role) => {
                                 return (<option key={option.name} value={option.name}>{option.name}</option>);
                             })
                         }
@@ -233,7 +195,8 @@ function NewUser() {
                 <p className="field">
                     <label className="label" htmlFor="select">Server park
                     </label>
-                    <select value={serverPark} id="select" name="select" className="input input--select " onChange={(e) => setServerPark(e.target.value)}>
+                    <select value={serverPark} id="select" name="select" className="input input--select "
+                            onChange={(e) => setServerPark(e.target.value)}>
                         {
                             serverParkList.map((option: ServerPark) => {
                                 return (<option key={option.name} value={option.name}>{option.name}</option>);

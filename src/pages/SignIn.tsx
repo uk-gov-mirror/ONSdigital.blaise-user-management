@@ -1,7 +1,6 @@
-import React, {EventHandler, useState} from "react";
-import {Link, Redirect, useParams, useLocation} from "react-router-dom";
-import {isDevEnv} from "./Functions";
-import {ONSTextInput, ONSButton, ONSPasswordInput} from "blaise-design-system-react-components";
+import React, {useState} from "react";
+import {Redirect, useLocation} from "react-router-dom";
+import {ONSTextInput, ONSButton, ONSPasswordInput, ONSPanel} from "blaise-design-system-react-components";
 
 
 interface Props {
@@ -24,7 +23,7 @@ function SignIn(props: Props) {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const {from} = (location as location).state || { from: { pathname: "/" } };
+    const {from} = (location as location).state || {from: {pathname: "/"}};
 
     const {setAuthenticationToken} = props;
 
@@ -56,9 +55,9 @@ function SignIn(props: Props) {
                 redirect && <Redirect to={from}/>
             }
             <h1>Sign in</h1>
-            <p>
-                {message}
-            </p>
+
+            {(message !== "" && <ONSPanel status={"error"}>{message}</ONSPanel>)}
+
             <form onSubmit={() => changePassword()}>
                 <ONSTextInput label={"Username"}
                               autoFocus={true}

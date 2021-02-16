@@ -11,18 +11,19 @@ import {
 import UserList from "./Components/UserList";
 import {User} from "../Interfaces";
 import {ErrorBoundary} from "./Components/ErrorHandling/ErrorBoundary";
-import NewUser from "./NewUser";
-import ChangePassword from "./ChangePassword";
-import DeleteUser from "./DeleteUser";
-import SignIn from "./SignIn";
-import NewRole from "./NewRole";
+import NewUser from "./pages/NewUser";
+import ChangePassword from "./pages/ChangePassword";
+import DeleteUser from "./pages/DeleteUser";
+import SignIn from "./pages/SignIn";
+import NewRole from "./pages/NewRole";
 import {getAllUsers} from "./utilities/http";
 
 import {NotProductionWarning, Footer, Header, ONSPanel, BetaBanner} from "blaise-design-system-react-components";
+import Roles from "./pages/Roles";
 
 interface Panel {
     visible: boolean
-    message:string
+    message: string
     status: string
 }
 
@@ -96,25 +97,23 @@ function App(): ReactElement {
         const [success, instrumentList] = await getAllUsers();
 
         if (!success) {
-            setListError("Unable to load questionnaires");
+            setListError("Unable to load users");
             return;
         }
 
         if (instrumentList.length === 0) {
-            setListError("No installed questionnaires found.");
+            setListError("No installed users found.");
         }
 
         setUsers(instrumentList);
     }
 
 
-
-
     return (
         <>
             <BetaBanner/>
             <NotProductionWarning/>
-            <Header title={"Blaise User Management"} />
+            <Header title={"Blaise User Management"}/>
             <div style={divStyle} className="page__container container">
                 <main id="main-content" className="page__main">
                     <ONSPanel hidden={!panel.visible} status={panel.status}>
@@ -133,6 +132,9 @@ function App(): ReactElement {
                             </PrivateRoute>
                             <PrivateRoute path={"/role"}>
                                 <NewRole/>
+                            </PrivateRoute>
+                            <PrivateRoute path={"/roles"}>
+                                <Roles/>
                             </PrivateRoute>
                             <Route path="/signin">
                                 <ErrorBoundary errorMessageText={"Unable to load survey table correctly"}>

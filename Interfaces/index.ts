@@ -23,3 +23,9 @@ export interface User {
     defaultServerPark: string
     serverParks: string[]
 }
+
+export interface Role {
+    name: string
+    permissions: string[]
+    description: string
+}
