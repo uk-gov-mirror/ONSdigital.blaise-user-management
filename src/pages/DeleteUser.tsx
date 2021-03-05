@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link, Redirect, useParams} from "react-router-dom";
-import {isDevEnv} from "../Functions";
-import {ONSButton} from "blaise-design-system-react-components";
+import {ONSButton, ONSPanel} from "blaise-design-system-react-components";
 
 
 interface ReturnPanel {
@@ -37,22 +36,11 @@ function DeleteUser() {
                 "user": user,
             }
         }).then((r: Response) => {
-            if (r.status === 200) {
-                r.json()
-                    .then((json) => {
-                            console.log("Retrieved users list, " + json.length + " items/s");
-                            isDevEnv() && console.log(json);
-                            setButtonLoading(false);
-                            setMessage("");
-                            setRedirect(true);
-                            setReturnPanel({visible: true, message: "User " + user + " deleted", status: "success"});
-                            return;
-                        }
-                    ).catch(() => {
-                    console.error("Unable to read json from response");
-                    setMessage("Set password failed");
-                    setButtonLoading(false);
-                });
+            if (r.status === 204) {
+                setButtonLoading(false);
+                setMessage("");
+                setReturnPanel({visible: true, message: "User " + user + " deleted", status: "success"});
+                setRedirect(true);
             } else {
                 console.error("Failed to retrieve instrument list, status " + r.status);
                 setMessage("Set password failed");
@@ -77,9 +65,9 @@ function DeleteUser() {
             <p><Link to={"/"}>Previous</Link></p>
             <h1>Are you sure you want to delete user <em className="highlight">{user}</em>?</h1>
 
-            <p>
+            <ONSPanel hidden={(message === "")} status="error">
                 {message}
-            </p>
+            </ONSPanel>
 
             <form onSubmit={() => deleteUser()}>
                 <fieldset className="fieldset">

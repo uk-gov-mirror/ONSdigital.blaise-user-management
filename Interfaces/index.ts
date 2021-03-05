@@ -19,6 +19,7 @@ export type {Instrument, Survey};
 
 export interface User {
     name: string
+    password?: string
     role: string
     defaultServerPark: string
     serverParks: string[]

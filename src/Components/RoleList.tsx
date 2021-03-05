@@ -26,7 +26,7 @@ function RoleList(props: Props): ReactElement {
 
         <ul className="list list--bare list--inline ">
             <li className="list__item ">
-                <Link to={"/role"}>
+                <Link to={"/roles/new"}>
                     Create new role
                 </Link>
             </li>
@@ -75,7 +75,7 @@ function RoleList(props: Props): ReactElement {
                                     <Link to={"/survey/" + item.name}>Edit</Link>
                                 </td>
                                 <td className="table__cell ">
-                                    <Link to={"/role/delete/" + item.name}>Delete</Link>
+                                    <Link to={"/roles/delete/" + item.name}>Delete</Link>
                                 </td>
 
                             </tr>

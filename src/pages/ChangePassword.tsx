@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Link, Redirect, useParams} from "react-router-dom";
 import {isDevEnv} from "../Functions";
-import {ONSButton, ONSPasswordInput} from "blaise-design-system-react-components";
+import {ONSButton, ONSPanel, ONSPasswordInput} from "blaise-design-system-react-components";
 
 
 
@@ -37,21 +37,9 @@ function ChangePassword() {
             }
         })
             .then((r: Response) => {
-                if (r.status === 200) {
-                    r.json()
-                        .then((json) => {
-                                console.log("Retrieved users list, " + json.length + " items/s");
-                                isDevEnv() && console.log(json);
-                                setButtonLoading(false);
-                                setMessage(json);
-                                setRedirect(true);
-                                return;
-                            }
-                        ).catch(() => {
-                        console.error("Unable to read json from response");
-                        setMessage("Set password failed");
-                        setButtonLoading(false);
-                    });
+                if (r.status === 204) {
+                    setButtonLoading(false);
+                    setRedirect(true);
                 } else {
                     console.error("Failed to retrieve instrument list, status " + r.status);
                     setMessage("Set password failed");
@@ -77,9 +65,9 @@ function ChangePassword() {
                 <Link to={"/"}>Previous</Link>
             </p>
             <h1>Change password for user <em>{user}</em></h1>
-            <p>
+            <ONSPanel hidden={(message === "")} status="error">
                 {message}
-            </p>
+            </ONSPanel>
             <form onSubmit={() => changePassword()}>
                 <ONSPasswordInput label={"New password"}
                                   autoFocus={true}

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
 import {isDevEnv} from "../Functions";
-import {ONSTextInput, ONSButton} from "blaise-design-system-react-components";
+import {ONSTextInput, ONSButton, ONSPanel} from "blaise-design-system-react-components";
 
 
 
@@ -33,7 +33,7 @@ function NewRole() {
             "body": formData,
         },)
             .then((r: Response) => {
-                if (r.status === 200) {
+                if (r.status === 201) {
                     r.json()
                         .then((json) => {
                                 console.log("Retrieved users list, " + json.length + " items/s");
@@ -61,26 +61,22 @@ function NewRole() {
         );
     }
 
-    useEffect(() => {
-        console.log(":)");
-    }, []);
-
 
     return (
         <>
             {
                 redirect && <Redirect to={{
-                    pathname: "/",
+                    pathname: "/roles",
                     state: {updatedPanel: {visible: true, message: "Role " + name + " created", status: "success"} }
                 }}/>
             }
             <p>
-                <Link to={"/"}>Previous</Link>
+                <Link to={"/roles"}>Previous</Link>
             </p>
             <h1>Create new role</h1>
-            <p>
+            <ONSPanel hidden={(message === "")} status="error">
                 {message}
-            </p>
+            </ONSPanel>
             <form onSubmit={() => createNewUser()}>
                 <ONSTextInput label={"Name"}
                               autoFocus={true}

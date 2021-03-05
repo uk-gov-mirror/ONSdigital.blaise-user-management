@@ -38,7 +38,6 @@ const divStyle = {
 
 function App(): ReactElement {
 
-    const [externalClientUrl, setExternalClientUrl] = useState<string>("External URL should be here");
     const [externalCATIUrl, setExternalCATIUrl] = useState<string>("/Blaise");
     const [panel, setPanel] = useState<Panel>({visible: false, message: "", status: "info"});
 
@@ -50,11 +49,9 @@ function App(): ReactElement {
 
 
     useEffect(function retrieveVariables() {
-        setExternalClientUrl(isDevEnv() ?
-            process.env.REACT_APP_VM_EXTERNAL_CLIENT_URL || externalClientUrl : (window as unknown as window).VM_EXTERNAL_CLIENT_URL);
         setExternalCATIUrl(isDevEnv() ?
             process.env.REACT_APP_CATI_DASHBOARD_URL || externalCATIUrl : (window as unknown as window).CATI_DASHBOARD_URL);
-    }, [externalClientUrl, externalCATIUrl]);
+    }, [externalCATIUrl]);
 
     const [users, setUsers] = useState<User[]>([]);
     const [listError, setListError] = useState<string>("Loading ...");
@@ -130,7 +127,7 @@ function App(): ReactElement {
                             <PrivateRoute path={"/user"}>
                                 <NewUser/>
                             </PrivateRoute>
-                            <PrivateRoute path={"/role"}>
+                            <PrivateRoute path={"/roles/new"}>
                                 <NewRole/>
                             </PrivateRoute>
                             <PrivateRoute path={"/roles"}>

@@ -1,6 +1,8 @@
 # Blaise User Management
 
 [![codecov](https://codecov.io/gh/ONSdigital/blaise-user-management/branch/main/graph/badge.svg)](https://codecov.io/gh/ONSdigital/telephone-operations-blaise-interface)
+[![CI status](https://github.com/ONSdigital/blaise-user-management/workflows/Test%20coverage%20report/badge.svg)](https://github.com/ONSdigital/blaise-deploy-questionnaire-service/workflows/Test%20coverage%20report/badge.svg)
+<img src="https://img.shields.io/github/release/ONSdigital/blaise-user-management.svg?style=flat-square" alt="blaise user management release verison">
 
 
 Dashboard for managing Blaise users.
@@ -109,4 +111,5 @@ You can run this service in a container, the Dockerfile is setup to:
 - Build the React project for serving by express
 - Run Yarn Start on startup
 
-gcloud builds submit --substitutions=_PROJECT_ID=ons-blaise-v2-dev,_VM_INTERNAL_URL=test,_VM_EXTERNAL_WEB_URL=dev-web.social-surveys.gcp.onsdigital.uk,_VM_EXTERNAL_CLIENT_URL=test,_BLAISE_API_URL=restapi-container.europe-west2-a.c.ons-blaise-v2-dev.internal:90
+gcloud builds submit --substitutions=_PROJECT_ID=ons-blaise-v2-dev-matt58,_VM_INTERNAL_URL=test,_VM_EXTERNAL_WEB_URL=dev-matt58-web.social-surveys.gcp.onsdigital.uk,_VM_EXTERNAL_CLIENT_URL=test,_BLAISE_API_URL=restapi.europe-west2-a.c.ons-blaise-v2-dev-matt58.internal:90
+gcloud builds submit --substitutions=_PROJECT_ID=ons-blaise-v2-dev,_VM_INTERNAL_URL=test,_VM_EXTERNAL_WEB_URL=dev-web.social-surveys.gcp.onsdigital.uk,_VM_EXTERNAL_CLIENT_URL=test,_BLAISE_API_URL=restapi.europe-west2-a.c.ons-blaise-v2-dev.internal:90,_SLACK_CHANNEL=moo,_SLACK_WEBHOOK=moo

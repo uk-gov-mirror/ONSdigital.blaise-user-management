@@ -1,115 +1,80 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, ReactElement, useEffect, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
-import {isDevEnv} from "../Functions";
-import {ONSTextInput, ONSButton, ONSPasswordInput} from "blaise-design-system-react-components";
-import {getAllRoles} from "../utilities/http";
-import {Role} from "../../Interfaces";
+import {ONSTextInput, ONSButton, ONSPasswordInput, ONSPanel} from "blaise-design-system-react-components";
+import {addNewUser, getAllRoles} from "../utilities/http";
+import {Role, User} from "../../Interfaces";
 
-interface listError {
-    error: boolean,
-    message: string
+
+interface FormErrors {
+    fieldID: string
+    errorMessage: string
 }
 
-interface ServerPark {
-    name: string
-}
-
-
-function NewUser() {
+function NewUser(): ReactElement {
     const [buttonLoading, setButtonLoading] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [role, setRole] = useState<string>("");
-    const [serverPark, setServerPark] = useState<string>("");
     const [message, setMessage] = useState<string>("");
     const [redirect, setRedirect] = useState<boolean>(false);
+    const [formErrors, setFormErrors] = useState<FormErrors[]>([]);
 
-    function createNewUser() {
+
+    async function createNewUser() {
+        console.log("Initialise createNewUser");
+        await setFormErrors([]);
+        const newFormErrors: FormErrors[] = [];
+
         if (username === "") {
-            setMessage("Password cannot be blank");
-            return;
+            newFormErrors.push({fieldID: "username", errorMessage: "Username cannot be blank"});
         }
+
         if (password === "") {
-            setMessage("Password cannot be blank");
-            return;
+            newFormErrors.push({fieldID: "password", errorMessage: "Password cannot be blank"});
         }
+
+        if (confirmPassword === "") {
+            newFormErrors.push({fieldID: "password", errorMessage: "Confirm password cannot be blank"});
+        }
+
         if (password !== confirmPassword) {
-            setMessage("Passwords do not match");
+            newFormErrors.push({fieldID: "password", errorMessage: "Passwords do not match"});
+        }
+
+        setFormErrors(newFormErrors);
+        if (newFormErrors.length > 0) {
             return;
         }
 
-        if (role === "") {
-            setMessage("Role needs to be set");
-            return;
-        }
-
-        if (serverPark === "") {
-            setMessage("ServerPark needs to be set");
-            return;
-        }
-
-        const newUSer = {
-            "password": password,
-            "name": username,
-            "role": "string",
-            "serverParks": [
-                "string"
-            ],
-            "defaultServerPark": "string"
+        const newUser: User = {
+            name: username,
+            password: password,
+            role: role,
+            defaultServerPark: "gusty",
+            serverParks: ["gusty"]
         };
 
-        const formData = new FormData();
-        formData.append("name", username);
-        formData.append("password", password);
-        formData.append("role", role);
-        formData.append("serverParks", `['${serverPark}']`);
-        formData.append("defaultServerPark", serverPark);
-        // formData.append("role_id", role);
-
         setButtonLoading(true);
-        fetch("/api/users", {
-            "method": "POST",
-            "body": formData,
-        },)
-            .then((r: Response) => {
-                if (r.status === 200) {
-                    r.json()
-                        .then((json) => {
-                                console.log("Retrieved users list, " + json.length + " items/s");
-                                isDevEnv() && console.log(json);
-                                setButtonLoading(false);
-                                setMessage(json.toString);
-                                setRedirect(true);
-                                return;
-                            }
-                        ).catch(() => {
-                        console.error("Unable to read json from response");
-                        setMessage("Set password failed");
-                        setButtonLoading(false);
-                    });
-                } else {
-                    console.error("Failed to retrieve instrument list, status " + r.status);
-                    setMessage("Set password failed");
-                    setButtonLoading(false);
-                }
-            }).catch(() => {
-                console.error("Failed to retrieve instrument list");
-                setMessage("Set password failed");
-                setButtonLoading(false);
-            }
-        );
+        const created = await addNewUser(newUser);
+
+        if (!created) {
+            console.error("Failed to create new user");
+            setMessage("Failed to create new user");
+            setButtonLoading(false);
+            return;
+        }
+
+        setButtonLoading(false);
+        setRedirect(true);
     }
 
     useEffect(() => {
         getRoleList().then(() => console.log("Call getRoleList Complete"));
-        getServerParkList();
     }, []);
 
     const [roleList, setRoleList] = useState<Role[]>([]);
     const [listError, setListError] = useState<string>("");
-    const [serverParkList, setServerParkList] = useState<ServerPark[]>([]);
-    const [serverParkListError, setServerParkListError] = useState<listError>({error: false, message: "Loading ..."});
 
     async function getRoleList() {
         setRoleList([]);
@@ -125,34 +90,8 @@ function NewUser() {
             setListError("No roles found.");
         }
 
+        setRole(roleList[0].name);
         setRoleList(roleList);
-    }
-
-    function getServerParkList() {
-        fetch("/api/serverparks", {})
-            .then((r: Response) => {
-                if (r.status === 200) {
-                    r.json()
-                        .then((json: ServerPark[]) => {
-                                console.log("Retrieved serverparks list, " + json.length + " items/s");
-                                isDevEnv() && console.log(json);
-                                setServerParkList(json);
-                                setServerPark(json[0].name);
-                                setServerParkListError({error: false, message: ""});
-                            }
-                        ).catch(() => {
-                        console.error("Unable to read json from response");
-                        setServerParkListError({error: true, message: "Unable to load surveys"});
-                    });
-                } else {
-                    console.error("Failed to retrieve instrument list, status " + r.status);
-                    setServerParkListError({error: true, message: "Unable to load surveys"});
-                }
-            }).catch(() => {
-                console.error("Failed to retrieve instrument list");
-                setServerParkListError({error: true, message: "Unable to load surveys"});
-            }
-        );
     }
 
     return (
@@ -166,39 +105,56 @@ function NewUser() {
             <p>
                 <Link to={"/"}>Previous</Link>
             </p>
-            <h1>Create new user</h1>
-            <p>
+            <h1>Create a new user</h1>
+            <ONSPanel hidden={(message === "")} status="error">
                 {message}
-            </p>
-            <form onSubmit={() => createNewUser()}>
-                <ONSTextInput autoFocus={true}
+            </ONSPanel>
+
+            {
+                formErrors.length > 0 &&
+                <div aria-labelledby="error-summary-title" role="alert"
+                     className="panel panel--error">
+                    <div className="panel__header">
+                        <h2 id="error-summary-title" data-qa="error-header" className="panel__title u-fs-r--b">There
+                            are {formErrors.length} problems with your answer</h2>
+                    </div>
+                    <div className="panel__body">
+                        <ol className="list">
+                            {
+                                formErrors.map(({fieldID, errorMessage}: FormErrors) => {
+                                    return (
+                                        <li key={fieldID} className="list__item ">
+                                            <a href={`#${fieldID}`}
+                                               className="list__link js-inpagelink">{errorMessage}</a>
+                                        </li>
+                                    );
+                                })
+                            }
+                        </ol>
+                    </div>
+                </div>
+            }
+
+
+            <form className="u-mt-m" onSubmit={() => createNewUser()}>
+                <ONSTextInput label={"Username"}
+                              id={"username"}
+                              autoFocus={true}
                               value={username}
-                              onChange={(e) => setUsername(e.target.value)}/>
+                              onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}/>
                 <ONSPasswordInput label={"Password"}
                                   value={password}
-                                  onChange={(e) => setPassword(e.target.value)}/>
+                                  onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
                 <ONSPasswordInput label={"Confirm password"}
                                   value={confirmPassword}
-                                  onChange={(e) => setConfirmPassword(e.target.value)}/>
+                                  onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}/>
                 <p className="field">
                     <label className="label" htmlFor="select">Role
                     </label>
-                    <select value={role} id="select" name="select" className="input input--select "
-                            onChange={(e) => setRole(e.target.value)}>
+                    <select value={role} id="role" name="select" className="input input--select "
+                            onChange={(e: ChangeEvent<HTMLSelectElement>) => setRole(e.target.value)}>
                         {
                             roleList.map((option: Role) => {
-                                return (<option key={option.name} value={option.name}>{option.name}</option>);
-                            })
-                        }
-                    </select>
-                </p>
-                <p className="field">
-                    <label className="label" htmlFor="select">Server park
-                    </label>
-                    <select value={serverPark} id="select" name="select" className="input input--select "
-                            onChange={(e) => setServerPark(e.target.value)}>
-                        {
-                            serverParkList.map((option: ServerPark) => {
                                 return (<option key={option.name} value={option.name}>{option.name}</option>);
                             })
                         }
