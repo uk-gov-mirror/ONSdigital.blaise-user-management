@@ -2,7 +2,7 @@ import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import {cleanup} from "@testing-library/react";
 import {mock_server_request_function, mock_server_request_Return_JSON} from "../../tests/utils";
-import {getAllRoles} from "./users";
+import {getAllRoles} from "./roles";
 
 
 describe("Function getAllUsers(filename: string) ", () => {

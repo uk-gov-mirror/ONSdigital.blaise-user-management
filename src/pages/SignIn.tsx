@@ -62,6 +62,7 @@ function SignIn(props: Props) {
                 <ONSTextInput label={"Username"}
                               autoFocus={true}
                               value={username}
+                              id={"username-field"}
                               onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setUsername(e.target.value)}/>
                 <ONSPasswordInput label={"Password"}
                                   value={password}
@@ -70,6 +71,7 @@ function SignIn(props: Props) {
                     label={"Sign in"}
                     primary={true}
                     loading={buttonLoading}
+                    testid={"sign-in"}
                     onClick={() => changePassword()}/>
             </form>
 
