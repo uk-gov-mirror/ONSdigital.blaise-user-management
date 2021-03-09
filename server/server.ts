@@ -6,8 +6,12 @@ import dotenv from "dotenv";
 import {getEnvironmentVariables} from "./Config";
 import createLogger from "./pino";
 import BlaiseAPIRouter from "./BlaiseAPI";
+import multer from "multer";
+const upload = multer();
 
 const server = express();
+
+server.use(upload.any());
 
 axios.defaults.timeout = 10000;
 
