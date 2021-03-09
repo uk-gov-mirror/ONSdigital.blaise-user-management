@@ -6,7 +6,7 @@ vpc_access_connector:
 
 env_variables:
   VM_EXTERNAL_WEB_URL: _VM_EXTERNAL_WEB_URL
-  _SERVER_PARK: _SERVER_PARK
+  SERVER_PARK: _SERVER_PARK
   BLAISE_API_URL: _BLAISE_API_URL
 
 basic_scaling:
