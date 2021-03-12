@@ -1,6 +1,9 @@
-import React, {useState} from "react";
+import React, {ReactElement, useState} from "react";
 import {Redirect, useLocation} from "react-router-dom";
-import {ONSTextInput, ONSButton, ONSPasswordInput, ONSPanel} from "blaise-design-system-react-components";
+import {ONSButton, ONSPanel} from "blaise-design-system-react-components";
+import FormTextInput from "../form/TextInput";
+import Form from "../form";
+import {requiredValidator} from "../form/FormValidators";
 
 
 interface Props {
@@ -11,27 +14,23 @@ interface location {
     state: any
 }
 
-function SignIn(props: Props) {
+interface FormData {
+    username: string
+    password: string
+}
+
+function SignIn(props: Props): ReactElement {
     const [buttonLoading, setButtonLoading] = useState<boolean>(false);
-    const [username, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
     const [message, setMessage] = useState<string>("");
     const [redirect, setRedirect] = useState<boolean>(false);
 
     const location = useLocation();
 
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const {from} = (location as location).state || {from: {pathname: "/"}};
 
     const {setAuthenticationToken} = props;
 
-    function changePassword() {
-        if (username === "") {
-            setMessage("Passwords cannot be blank");
-            return;
-        }
+    function signIn(formData: FormData) {
 
         setButtonLoading(true);
 
@@ -39,7 +38,6 @@ function SignIn(props: Props) {
 
         if (yeah === true) {
             setButtonLoading(false);
-            setMessage("Authentication successful");
             setAuthenticationToken("Auth");
             setRedirect(true);
         } else {
@@ -58,24 +56,28 @@ function SignIn(props: Props) {
 
             {(message !== "" && <ONSPanel status={"error"}>{message}</ONSPanel>)}
 
-            <form onSubmit={() => changePassword()}>
-                <ONSTextInput label={"Username"}
-                              autoFocus={true}
-                              value={username}
-                              id={"username-field"}
-                              onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setUsername(e.target.value)}/>
-                <ONSPasswordInput label={"Password"}
-                                  value={password}
-                                  onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setPassword(e.target.value)}/>
+            <Form onSubmit={(data) => signIn(data)}>
+                <p className="field">
+                    <FormTextInput
+                        name="username"
+                        validators={[requiredValidator]}
+                        label={"Username"}
+                    />
+                </p>
+                <p className="field">
+                    <FormTextInput
+                        name="password"
+                        validators={[requiredValidator]}
+                        label={"Password"}
+                        password={true}
+                    />
+                </p>
                 <ONSButton
                     label={"Sign in"}
                     primary={true}
                     loading={buttonLoading}
-                    testid={"sign-in"}
-                    onClick={() => changePassword()}/>
-            </form>
-
-
+                    submit={true}/>
+            </Form>
         </>
     );
 }
