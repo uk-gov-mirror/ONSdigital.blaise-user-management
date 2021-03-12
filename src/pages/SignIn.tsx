@@ -57,23 +57,24 @@ function SignIn(props: Props): ReactElement {
             {(message !== "" && <ONSPanel status={"error"}>{message}</ONSPanel>)}
 
             <Form onSubmit={(data) => signIn(data)}>
-                <p className="field">
-                    <FormTextInput
-                        name="username"
-                        validators={[requiredValidator]}
-                        label={"Username"}
-                    />
-                </p>
-                <p className="field">
-                    <FormTextInput
-                        name="password"
-                        validators={[requiredValidator]}
-                        label={"Password"}
-                        password={true}
-                    />
-                </p>
+
+                <FormTextInput
+                    name="username"
+                    validators={[requiredValidator]}
+                    label={"Username"}
+                />
+
+                <FormTextInput
+                    data-testid="login-password-input"
+                    name="password"
+                    validators={[requiredValidator]}
+                    label={"Password"}
+                    password={true}
+                />
+
                 <ONSButton
                     label={"Sign in"}
+                    testid={"sign-in"}
                     primary={true}
                     loading={buttonLoading}
                     submit={true}/>
