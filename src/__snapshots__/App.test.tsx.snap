@@ -41,36 +41,6 @@ Object {
           </div>
         </div>
       </div>
-      <div
-        class="census-warning"
-        style="background: rgb(208, 2, 27); color: rgb(208, 2, 27);"
-      >
-        <div
-          class="container"
-        >
-          <div
-            class="panel panel--warn-branded panel--no-title"
-            style="background: rgb(208, 2, 27);"
-          >
-            <span
-              aria-hidden="true"
-              class="panel__icon"
-              style="color: rgb(208, 2, 27);"
-            >
-              !
-            </span>
-            <div
-              class="panel__body"
-            >
-              <p
-                class="u-mb-no"
-              >
-                This environment is not a production environment. Do not upload any live data to this service.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
       <header
         class="header header--internal"
       >
@@ -373,36 +343,6 @@ Object {
                 feedback
               </a>
                will help us improve it.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="census-warning"
-      style="background: rgb(208, 2, 27); color: rgb(208, 2, 27);"
-    >
-      <div
-        class="container"
-      >
-        <div
-          class="panel panel--warn-branded panel--no-title"
-          style="background: rgb(208, 2, 27);"
-        >
-          <span
-            aria-hidden="true"
-            class="panel__icon"
-            style="color: rgb(208, 2, 27);"
-          >
-            !
-          </span>
-          <div
-            class="panel__body"
-          >
-            <p
-              class="u-mb-no"
-            >
-              This environment is not a production environment. Do not upload any live data to this service.
             </p>
           </div>
         </div>
@@ -772,36 +712,6 @@ Object {
           </div>
         </div>
       </div>
-      <div
-        class="census-warning"
-        style="background: rgb(208, 2, 27); color: rgb(208, 2, 27);"
-      >
-        <div
-          class="container"
-        >
-          <div
-            class="panel panel--warn-branded panel--no-title"
-            style="background: rgb(208, 2, 27);"
-          >
-            <span
-              aria-hidden="true"
-              class="panel__icon"
-              style="color: rgb(208, 2, 27);"
-            >
-              !
-            </span>
-            <div
-              class="panel__body"
-            >
-              <p
-                class="u-mb-no"
-              >
-                This environment is not a production environment. Do not upload any live data to this service.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
       <header
         class="header header--internal"
       >
@@ -1104,36 +1014,6 @@ Object {
                 feedback
               </a>
                will help us improve it.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="census-warning"
-      style="background: rgb(208, 2, 27); color: rgb(208, 2, 27);"
-    >
-      <div
-        class="container"
-      >
-        <div
-          class="panel panel--warn-branded panel--no-title"
-          style="background: rgb(208, 2, 27);"
-        >
-          <span
-            aria-hidden="true"
-            class="panel__icon"
-            style="color: rgb(208, 2, 27);"
-          >
-            !
-          </span>
-          <div
-            class="panel__body"
-          >
-            <p
-              class="u-mb-no"
-            >
-              This environment is not a production environment. Do not upload any live data to this service.
             </p>
           </div>
         </div>

@@ -109,7 +109,9 @@ function App(): ReactElement {
     return (
         <>
             <BetaBanner/>
-            <NotProductionWarning/>
+            {
+                (window.location.hostname.includes("dev")) && <NotProductionWarning/>
+            }
             <Header title={"Blaise User Management"}/>
             <div style={divStyle} className="page__container container">
                 <main id="main-content" className="page__main">

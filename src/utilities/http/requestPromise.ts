@@ -1,6 +1,7 @@
 type PromiseResponse = [number, any];
 
 function requestPromiseJson(method: string, url: string, body: any = null): Promise<PromiseResponse> {
+    console.log(body);
     return new Promise((resolve: (object: PromiseResponse) => void, reject: (error: string) => void) => {
         fetch(url, {
             "method": method,

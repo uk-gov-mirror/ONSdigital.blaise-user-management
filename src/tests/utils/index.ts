@@ -22,14 +22,14 @@ export function mock_server_request_function(mock_function: any) {
 
 export default () => flushPromises().then(flushPromises);
 
-export function loginUser() {
+export function loginUser(): void {
     fireEvent.input(screen.getByLabelText(/Username/i), {
         target: {
             value:
-                "Test"
+                "Blaise"
         }
     });
-    fireEvent.input(screen.getByTestId(/login-password-input/i), {
+    fireEvent.input(screen.getByLabelText("Password"), {
         target: {
             value:
                 "password"
