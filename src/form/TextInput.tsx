@@ -62,7 +62,7 @@ const TextInput = (props: TextInputProps): ReactElement => {
                        type={props.password ? showPassword ? "text" : "password" : "text"}
                        placeholder={props.placeholder}
                        onChange={onChange}
-                       value={props.value}/>
+                />
             </>
         );
     }

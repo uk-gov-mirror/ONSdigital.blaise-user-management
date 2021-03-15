@@ -72,12 +72,14 @@ function SignIn(props: Props): ReactElement {
                     password={true}
                 />
 
-                <ONSButton
-                    label={"Sign in"}
-                    testid={"sign-in"}
-                    primary={true}
-                    loading={buttonLoading}
-                    submit={true}/>
+                <div className="u-mt-s">
+                    <ONSButton
+                        label={"Sign in"}
+                        testid={"sign-in"}
+                        primary={true}
+                        loading={buttonLoading}
+                        submit={true}/>
+                </div>
             </Form>
         </>
     );
