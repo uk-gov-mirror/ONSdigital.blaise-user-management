@@ -34,15 +34,13 @@ function SignIn(props: Props): ReactElement {
 
         setButtonLoading(true);
 
-        const yeah = true;
-
-        if (yeah === true) {
+        if (formData.username === "Blaise") {
             setButtonLoading(false);
             setAuthenticationToken("Auth");
             setRedirect(true);
         } else {
             setButtonLoading(false);
-            setMessage("Authentication failed");
+            setMessage("Invalid username or password");
         }
     }
 
