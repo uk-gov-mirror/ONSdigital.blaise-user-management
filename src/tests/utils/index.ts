@@ -26,7 +26,7 @@ export function loginUser(): void {
     fireEvent.input(screen.getByLabelText(/Username/i), {
         target: {
             value:
-                "Test"
+                "Blaise"
         }
     });
     fireEvent.input(screen.getByLabelText("Password"), {
