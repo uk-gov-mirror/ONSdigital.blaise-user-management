@@ -4,7 +4,7 @@ import {render, waitFor, cleanup, screen} from "@testing-library/react";
 import Adapter from "enzyme-adapter-react-16";
 import App from "./App";
 import "@testing-library/jest-dom";
-import flushPromises, {loginUser} from "./tests/utils";
+import flushPromises, {loginUser, mock_server_request_Return_JSON} from "./tests/utils";
 import {act} from "react-dom/test-utils";
 import {createMemoryHistory} from "history";
 import {Router} from "react-router";
@@ -19,20 +19,11 @@ const userListReturned: User[] = [
     }
 ];
 
-function mock_server_request(returnedStatus: number, returnedJSON: any) {
-    global.fetch = jest.fn(() =>
-        Promise.resolve({
-            status: returnedStatus,
-            json: () => Promise.resolve(returnedJSON),
-        })
-    );
-}
-
 describe("React homepage", () => {
     Enzyme.configure({adapter: new Adapter()});
 
     beforeAll(() => {
-        mock_server_request(200, userListReturned);
+        mock_server_request_Return_JSON(200, userListReturned);
     });
 
 
@@ -117,7 +108,7 @@ describe("Given the API returns malformed json", () => {
     Enzyme.configure({adapter: new Adapter()});
 
     beforeAll(() => {
-        mock_server_request(200, {text: "Hello"});
+        mock_server_request_Return_JSON(200, {text: "Hello"});
     });
 
     it("it should render with the error message displayed", async () => {
@@ -152,7 +143,7 @@ describe("Given the API returns an empty list", () => {
     Enzyme.configure({adapter: new Adapter()});
 
     beforeAll(() => {
-        mock_server_request(200, []);
+        mock_server_request_Return_JSON(200, []);
     });
 
     it("it should render with a message to inform the user in the list", async () => {
