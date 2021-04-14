@@ -19,6 +19,9 @@
   "jest": {
     "coveragePathIgnorePatterns": [
       "/node_modules/"
+    ],
+    "testPathIgnorePatterns" : [
+      "/resources/"
     ]
   },
   "pre-commit": [

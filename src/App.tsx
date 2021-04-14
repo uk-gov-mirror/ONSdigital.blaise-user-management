@@ -57,7 +57,7 @@ function App(): ReactElement {
     const [users, setUsers] = useState<User[]>([]);
     const [listError, setListError] = useState<string>("Loading ...");
 
-    const [authentication, setAuthentication] = useState("sd");
+    const [authentication, setAuthentication] = useState(null);
 
 
     // A wrapper for <Route> that redirects to the login
@@ -68,6 +68,7 @@ function App(): ReactElement {
     function PrivateRoute({children, ...rest}) {
         return (
             <Route
+                exact
                 {...rest}
                 render={({location}) =>
                     authentication !== null ? (

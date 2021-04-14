@@ -3,9 +3,6 @@ import {Link} from "react-router-dom";
 import {ONSButton} from "blaise-design-system-react-components";
 import CSVReader from "react-csv-reader";
 import {ImportUser, Role} from "../../../Interfaces";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import csv from "../../resources/users.csv";
 import {getAllRoles} from "../../utilities/http";
 
 interface Props {
@@ -140,14 +137,14 @@ function SelectFile({setUsersToUpload, movePageForward}: Props): ReactElement {
                     <div className="download">
                         <div className="download__image" aria-hidden="true">
                             <a className="download__image-link"
-                               href={csv}>
+                               href="/documents/users.csv">
                                 <img src="https://ons-design-system.netlify.app/img/small/placeholder-portrait.png" alt=""
                                      loading="lazy"/>
                             </a>
                         </div>
                         <div className="download__content">
                             <h3 className="u-fs-m u-mt-no u-mb-xs">
-                                <a href={csv}>
+                                <a href="/documents/users.csv">
                                     Bulk user upload template file<span className="u-vh">,
                                 CSV document download, 48 Bytes
                         </span></a>
