@@ -1,6 +1,7 @@
 import React, {ReactElement, useState} from "react";
 import {useHistory} from "react-router-dom";
 import {ONSButton, ONSPanel} from "blaise-design-system-react-components";
+import converter from "number-to-words";
 
 interface Props {
     validUsers: number
@@ -90,7 +91,7 @@ function confirmDeleteRadios(validUsers: number, setConfirm: (value: (((prevStat
                             onChange={() => setConfirm(true)}
                         />
                         <label className="radio__label " htmlFor="confirm-upload">
-                            Yes, upload {validUsers} valid user{(validUsers > 1 && "s")}
+                            Yes, upload {converter.toWords(validUsers)} valid user{(validUsers > 1 && "s")}
                         </label>
                     </span></p>
                 <br/>

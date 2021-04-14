@@ -3,6 +3,7 @@ import {ONSButton, ONSPanel} from "blaise-design-system-react-components";
 import {UploadedUser} from "../../../Interfaces";
 import {ErrorBoundary} from "../../Components/ErrorHandling/ErrorBoundary";
 import {useHistory} from "react-router-dom";
+import converter from "number-to-words";
 
 
 interface Props {
@@ -80,7 +81,7 @@ function UsersUploadedSummary({usersUploaded, numberOfValidUsers}: Props): React
 
     return (
         <>
-            <h1 className="u-mt-l">Uploaded <em>{numberOfCreatedUsers} of {numberOfValidUsers}</em> user{(numberOfValidUsers > 1 && "s")} successfully
+            <h1 className="u-mt-l">Uploaded <em>{converter.toWords(numberOfCreatedUsers)} of {converter.toWords(numberOfValidUsers)}</em> user{(numberOfValidUsers > 1 && "s")} successfully
             </h1>
 
             {
