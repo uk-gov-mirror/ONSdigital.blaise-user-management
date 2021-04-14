@@ -20,6 +20,7 @@ import {getAllUsers} from "./utilities/http";
 
 import {NotProductionWarning, Footer, Header, ONSPanel, BetaBanner} from "blaise-design-system-react-components";
 import Roles from "./pages/Roles";
+import BulkUserUpload from "./pages/BulkUserUpload/BulkUserUpload";
 
 interface Panel {
     visible: boolean
@@ -56,7 +57,7 @@ function App(): ReactElement {
     const [users, setUsers] = useState<User[]>([]);
     const [listError, setListError] = useState<string>("Loading ...");
 
-    const [authentication, setAuthentication] = useState(null);
+    const [authentication, setAuthentication] = useState("sd");
 
 
     // A wrapper for <Route> that redirects to the login
@@ -120,6 +121,9 @@ function App(): ReactElement {
                     </ONSPanel>
                     <DefaultErrorBoundary>
                         <Switch>
+                            <PrivateRoute path={"/user/upload"}>
+                                <BulkUserUpload/>
+                            </PrivateRoute>
                             <PrivateRoute path={"/user/changepassword/:user"}>
                                 <ChangePassword/>
                             </PrivateRoute>
