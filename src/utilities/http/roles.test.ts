@@ -1,12 +1,9 @@
-import Enzyme from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import {cleanup} from "@testing-library/react";
 import {mock_server_request_function, mock_server_request_Return_JSON} from "../../tests/utils";
 import {getAllRoles} from "./roles";
 
 
 describe("Function getAllUsers(filename: string) ", () => {
-    Enzyme.configure({adapter: new Adapter()});
 
     it("It should return true with data if the list is returned successfully", async () => {
         mock_server_request_Return_JSON(200, []);
