@@ -57,12 +57,12 @@ function ChangePassword() {
         <>
             {
                 redirect && <Redirect to={{
-                    pathname: "/",
+                    pathname: "/users",
                     state: {updatedPanel: {visible: true, message: "Password for user " + user + " changed", status: "success"} }
                 }}/>
             }
             <p>
-                <Link to={"/"}>Previous</Link>
+                <Link to={"/users"}>Previous</Link>
             </p>
             <h1>Change password for user <em>{user}</em></h1>
             <ONSPanel hidden={(message === "")} status="error">

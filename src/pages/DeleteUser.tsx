@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {ReactElement, useState} from "react";
 import {Link, Redirect, useParams} from "react-router-dom";
 import {ONSButton, ONSPanel} from "blaise-design-system-react-components";
 
@@ -8,12 +8,13 @@ interface ReturnPanel {
     message: string
     status: string
 }
+
 interface Parmas {
     user: string
 }
 
 
-function DeleteUser() {
+function DeleteUser() : ReactElement {
     const [buttonLoading, setButtonLoading] = useState<boolean>(false);
     const [confirm, setConfirm] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
@@ -58,11 +59,11 @@ function DeleteUser() {
         <>
             {
                 redirect && <Redirect to={{
-                    pathname: "/",
+                    pathname: "/users",
                     state: {updatedPanel: returnPanel}
                 }}/>
             }
-            <p><Link to={"/"}>Previous</Link></p>
+            <p className="cu"><Link to={"/users"}>Previous</Link></p>
             <h1>Are you sure you want to delete user <em className="highlight">{user}</em>?</h1>
 
             <ONSPanel hidden={(message === "")} status="error">

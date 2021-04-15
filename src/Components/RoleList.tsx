@@ -19,10 +19,10 @@ function RoleList(props: Props): ReactElement {
     const {state}: location = useLocation();
 
     return <>
-        <p>
+        <p className="u-mt-m">
             <Link to={"/"}>Previous</Link>
         </p>
-        <h1 className="u-mt-m">Roles</h1>
+        <h1 className="u-mt-s">Manage roles</h1>
 
         <ul className="list list--bare list--inline ">
             <li className="list__item ">
@@ -46,12 +46,12 @@ function RoleList(props: Props): ReactElement {
                 <th scope="col" className="table__header ">
                     <span>Number of permissions</span>
                 </th>
-                <th scope="col" className="table__header ">
-                    <span>Edit role</span>
-                </th>
-                <th scope="col" className="table__header ">
-                    <span>Delete role</span>
-                </th>
+                {/*<th scope="col" className="table__header ">*/}
+                {/*    <span>Edit role</span>*/}
+                {/*</th>*/}
+                {/*<th scope="col" className="table__header ">*/}
+                {/*    <span>Delete role</span>*/}
+                {/*</th>*/}
 
             </tr>
             </thead>
@@ -71,12 +71,12 @@ function RoleList(props: Props): ReactElement {
                                 <td className="table__cell ">
                                     {item.permissions.length}
                                 </td>
-                                <td className="table__cell ">
-                                    <Link to={"/survey/" + item.name}>Edit</Link>
-                                </td>
-                                <td className="table__cell ">
-                                    <Link to={"/roles/delete/" + item.name}>Delete</Link>
-                                </td>
+                                {/*<td className="table__cell ">*/}
+                                {/*    <Link to={"/survey/" + item.name}>Edit</Link>*/}
+                                {/*</td>*/}
+                                {/*<td className="table__cell ">*/}
+                                {/*    <Link to={"/roles/delete/" + item.name}>Delete</Link>*/}
+                                {/*</td>*/}
 
                             </tr>
                         );

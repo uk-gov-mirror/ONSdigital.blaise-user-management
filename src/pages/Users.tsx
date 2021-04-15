@@ -1,13 +1,12 @@
-import React, {ReactElement, useEffect} from "react";
+import React, {ReactElement, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {User} from "../../Interfaces";
 import {useLocation} from "react-router-dom";
 import {ExternalLink, ONSErrorPanel} from "blaise-design-system-react-components";
+import {getAllUsers} from "../utilities/http";
 
 interface Props {
-    list: User[],
-    listError: string
-    getUsers: any
+    currentUser: User
     externalCATIUrl: string
     updatePanel: any
     panel: Panel
@@ -24,24 +23,50 @@ interface location {
     state: any
 }
 
-function UserList(props: Props): ReactElement {
-    const {list, listError, getUsers, externalCATIUrl, updatePanel, panel} = props;
+function Users({currentUser, externalCATIUrl, updatePanel, panel}: Props): ReactElement {
     const {state}: location = useLocation();
     const {updatedPanel} = state || {updatedPanel: null};
+    const [users, setUsers] = useState<User[]>([]);
+    const [listError, setListError] = useState<string>("Loading ...");
+
     useEffect(() => {
         if (updatedPanel === null) {
             return;
         }
         if (updatedPanel.message !== panel.message) {
             updatePanel(updatedPanel.visible, updatedPanel.message, updatedPanel.status);
-            getUsers();
+            getUserList().then(() => console.log("Call getUserList Complete"));
         }
 
     }, []);
 
+    useEffect(() => {
+        getUserList().then(() => console.log("Call getUserList Complete"));
+    }, []);
+
+    async function getUserList() {
+        setUsers([]);
+
+        const [success, instrumentList] = await getAllUsers();
+
+        if (!success) {
+            setListError("Unable to load users");
+            return;
+        }
+
+        if (instrumentList.length === 0) {
+            setListError("No installed users found.");
+        }
+
+        setUsers(instrumentList);
+    }
+
 
     return <>
-        <h1 className="u-mt-m">Users</h1>
+        <p className="u-mt-m">
+            <Link to={"/"}>Previous</Link>
+        </p>
+        <h1 className="u-mt-s">Manage users</h1>
         <ul className="list list--bare list--inline ">
             <li className="list__item ">
                 <Link to={"/user"}>
@@ -51,11 +76,6 @@ function UserList(props: Props): ReactElement {
             <li className="list__item ">
                 <Link to={"/user/upload"}>
                     Bulk upload users
-                </Link>
-            </li>
-            <li className="list__item ">
-                <Link to={"/roles"}>
-                    Manage roles
                 </Link>
             </li>
         </ul>
@@ -78,9 +98,9 @@ function UserList(props: Props): ReactElement {
                 <th scope="col" className="table__header ">
                     <span>Default server park</span>
                 </th>
-                <th scope="col" className="table__header ">
-                    <span>Edit user</span>
-                </th>
+                {/*<th scope="col" className="table__header ">*/}
+                {/*    <span>Edit user</span>*/}
+                {/*</th>*/}
                 <th scope="col" className="table__header ">
                     <span>Change password</span>
                 </th>
@@ -91,9 +111,9 @@ function UserList(props: Props): ReactElement {
             </thead>
             <tbody className="table__body">
             {
-                list && list.length > 0
+                users && users.length > 0
                     ?
-                    list.map((item: User) => {
+                    users.map((item: User) => {
                         return (
                             <tr className="table__row" key={item.name} data-testid={"user-table-row"}>
                                 <td className="table__cell ">
@@ -105,14 +125,20 @@ function UserList(props: Props): ReactElement {
                                 <td className="table__cell ">
                                     {item.defaultServerPark}
                                 </td>
-                                <td className="table__cell ">
-                                    <Link to={"/survey/" + item.name}>Edit</Link>
-                                </td>
+                                {/*<td className="table__cell ">*/}
+                                {/*    <Link to={"/survey/" + item.name}>Edit</Link>*/}
+                                {/*</td>*/}
                                 <td className="table__cell ">
                                     <Link to={"/user/changepassword/" + item.name}>Change password</Link>
                                 </td>
                                 <td className="table__cell ">
-                                    <Link to={"/user/delete/" + item.name}>Delete</Link>
+                                    {
+                                        (
+                                            item.name === currentUser.name ?
+                                                "Currently signed in user" :
+                                                <Link to={"/user/delete/" + item.name}>Delete</Link>
+                                        )
+                                    }
                                 </td>
                             </tr>
                         );
@@ -130,4 +156,4 @@ function UserList(props: Props): ReactElement {
         ;
 }
 
-export default UserList;
+export default Users;
