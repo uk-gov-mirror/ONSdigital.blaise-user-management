@@ -1,5 +1,5 @@
 import {requestPromiseJson} from "./requestPromise";
-import {Instrument, User} from "../../../Interfaces";
+import {User} from "../../../Interfaces";
 
 type getUsersListResponse = [boolean, User[]];
 

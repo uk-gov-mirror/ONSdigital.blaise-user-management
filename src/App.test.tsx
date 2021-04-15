@@ -8,47 +8,20 @@ import {createMemoryHistory} from "history";
 import {Router} from "react-router";
 import {User} from "../Interfaces";
 
-const userListReturned: User[] = [
-    {
-        defaultServerPark: "gusty",
-        name: "TestUser123",
-        role: "DST",
-        serverParks: ["gusty"]
-    }
-];
+const userReturned: User = {
+    defaultServerPark: "gusty",
+    name: "TestUser123",
+    role: "DST",
+    serverParks: ["gusty"]
+};
 
 describe("React homepage", () => {
 
     beforeAll(() => {
-        mock_server_request_Return_JSON(200, userListReturned);
+        mock_server_request_Return_JSON(200, userReturned);
     });
 
-
-    it("view users page matches Snapshot", async () => {
-        const history = createMemoryHistory();
-        const wrapper = render(
-            <Router history={history}>
-                <App/>
-            </Router>
-        );
-
-        await loginUser();
-
-        await act(async () => {
-            await flushPromises();
-        });
-
-
-        await act(async () => {
-            await flushPromises();
-        });
-
-        await waitFor(() => {
-            expect(wrapper).toMatchSnapshot();
-        });
-    });
-
-    it("view users page matches Snapshot", async () => {
+    it("the homepage matches Snapshot", async () => {
         const history = createMemoryHistory();
         const wrapper = render(
             <Router history={history}>
@@ -89,6 +62,8 @@ describe("React homepage", () => {
 
         await waitFor(() => {
             expect(screen.getByText(/Blaise User Management/i)).toBeDefined();
+            expect(screen.getByText(/TestUser123/i)).toBeDefined();
+            expect(screen.getByText(/DST/i)).toBeDefined();
             expect(screen.getByText(/Manage users/i)).toBeDefined();
             expect(screen.getByText(/Manage roles/i)).toBeDefined();
             expect(screen.queryByText(/Loading/i)).not.toBeInTheDocument();
@@ -100,72 +75,3 @@ describe("React homepage", () => {
         cleanup();
     });
 });
-
-
-// describe("Given the API returns malformed json", () => {
-//
-//     beforeAll(() => {
-//         mock_server_request_Return_JSON(200, {text: "Hello"});
-//     });
-//
-//     it("it should render with the error message displayed", async () => {
-//         const history = createMemoryHistory();
-//         const {getByText, queryByText} = render(
-//             <Router history={history}>
-//                 <App/>
-//             </Router>
-//         );
-//
-//         await loginUser();
-//
-//         await act(async () => {
-//             await flushPromises();
-//         });
-//
-//
-//         await waitFor(() => {
-//             expect(getByText(/Sorry, there is a problem with this service. We are working to fix the problem. Please try again later./i)).toBeDefined();
-//             expect(queryByText(/Loading/i)).not.toBeInTheDocument();
-//         });
-//
-//     });
-//
-//     afterAll(() => {
-//         jest.clearAllMocks();
-//         cleanup();
-//     });
-// });
-//
-// describe("Given the API returns an empty list", () => {
-//
-//     beforeAll(() => {
-//         mock_server_request_Return_JSON(200, []);
-//     });
-//
-//     it("it should render with a message to inform the user in the list", async () => {
-//         const history = createMemoryHistory();
-//         const {getByText, queryByText} = render(
-//             <Router history={history}>
-//                 <App/>
-//             </Router>
-//         );
-//
-//         await loginUser();
-//
-//         await act(async () => {
-//             await flushPromises();
-//         });
-//
-//
-//         await waitFor(() => {
-//             expect(getByText(/No installed users found./i)).toBeDefined();
-//             expect(queryByText(/Loading/i)).not.toBeInTheDocument();
-//         });
-//
-//     });
-//
-//     afterAll(() => {
-//         jest.clearAllMocks();
-//         cleanup();
-//     });
-// });
