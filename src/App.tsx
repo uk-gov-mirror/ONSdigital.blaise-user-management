@@ -1,14 +1,12 @@
 import React, {ReactElement, useEffect, useState} from "react";
-// import Header from "./Components/ONSDesignSystem/Header";
 import {DefaultErrorBoundary} from "./Components/ErrorHandling/DefaultErrorBoundary";
-// import Footer from "./Components/ONSDesignSystem/Footer";
 import {isDevEnv} from "./Functions";
 import {
     Switch,
     Route,
     Redirect
 } from "react-router-dom";
-import UserList from "./Components/UserList";
+import Users from "./pages/Users";
 import {User} from "../Interfaces";
 import {ErrorBoundary} from "./Components/ErrorHandling/ErrorBoundary";
 import NewUser from "./pages/NewUser";
@@ -16,11 +14,11 @@ import ChangePassword from "./pages/ChangePassword";
 import DeleteUser from "./pages/DeleteUser";
 import SignIn from "./pages/SignIn";
 import NewRole from "./pages/NewRole";
-import {getAllUsers} from "./utilities/http";
 
 import {NotProductionWarning, Footer, Header, ONSPanel, BetaBanner} from "blaise-design-system-react-components";
 import Roles from "./pages/Roles";
 import BulkUserUpload from "./pages/BulkUserUpload/BulkUserUpload";
+import Home from "./pages/Home";
 
 interface Panel {
     visible: boolean
@@ -54,10 +52,18 @@ function App(): ReactElement {
             process.env.REACT_APP_CATI_DASHBOARD_URL || externalCATIUrl : (window as unknown as window).CATI_DASHBOARD_URL);
     }, [externalCATIUrl]);
 
-    const [users, setUsers] = useState<User[]>([]);
-    const [listError, setListError] = useState<string>("Loading ...");
 
-    const [authentication, setAuthentication] = useState(null);
+    function loginUser(user: User) {
+        setAuthenticatedUser(user);
+        setUserAuthenticated(true);
+    }
+
+    const [authenticatedUser, setAuthenticatedUser] = useState<User>({
+        defaultServerPark: "",
+        password: "",
+        serverParks: [],
+        name: "", role: ""});
+    const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
 
     // A wrapper for <Route> that redirects to the login
@@ -71,7 +77,7 @@ function App(): ReactElement {
                 exact
                 {...rest}
                 render={({location}) =>
-                    authentication !== null ? (
+                    userAuthenticated ? (
                         children
                     ) : (
                         <Redirect
@@ -86,34 +92,13 @@ function App(): ReactElement {
         );
     }
 
-    useEffect(() => {
-        getUserList().then(() => console.log("Call getUserList Complete"));
-    }, []);
-
-    async function getUserList() {
-        setUsers([]);
-
-        const [success, instrumentList] = await getAllUsers();
-
-        if (!success) {
-            setListError("Unable to load users");
-            return;
-        }
-
-        if (instrumentList.length === 0) {
-            setListError("No installed users found.");
-        }
-
-        setUsers(instrumentList);
-    }
-
 
     return (
         <>
-            <BetaBanner/>
             {
                 (window.location.hostname.includes("dev")) && <NotProductionWarning/>
             }
+            <BetaBanner/>
             <Header title={"Blaise User Management"}/>
             <div style={divStyle} className="page__container container">
                 <main id="main-content" className="page__main">
@@ -142,19 +127,22 @@ function App(): ReactElement {
                             </PrivateRoute>
                             <Route path="/signin">
                                 <ErrorBoundary errorMessageText={"Unable to load survey table correctly"}>
-                                    <SignIn setAuthenticationToken={setAuthentication}/>
+                                    <SignIn setAuthenticatedUser={loginUser}/>
                                 </ErrorBoundary>
                             </Route>
-                            <PrivateRoute path="/">
+                            <PrivateRoute path="/users">
                                 <ErrorBoundary errorMessageText={"Unable to load user table correctly"}>
-                                    <UserList list={users}
-                                              listError={listError}
-                                              getUsers={getUserList}
-                                              externalCATIUrl={externalCATIUrl}
-                                              updatePanel={updatePanel}
-                                              panel={panel}/>
+                                    <Users currentUser={authenticatedUser}
+                                           externalCATIUrl={externalCATIUrl}
+                                           updatePanel={updatePanel}
+                                           panel={panel}/>
                                 </ErrorBoundary>
                             </PrivateRoute>
+                            <PrivateRoute path="/">
+                            <ErrorBoundary errorMessageText={"Unable to load user table correctly"}>
+                                <Home user={authenticatedUser}/>
+                            </ErrorBoundary>
+                        </PrivateRoute>
                         </Switch>
                     </DefaultErrorBoundary>
                 </main>
