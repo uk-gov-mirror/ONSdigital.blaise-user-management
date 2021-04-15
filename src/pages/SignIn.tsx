@@ -1,13 +1,15 @@
 import React, {ReactElement, useState} from "react";
-import {Redirect, useLocation} from "react-router-dom";
+import {Link, Redirect, useLocation} from "react-router-dom";
 import {ONSButton, ONSPanel} from "blaise-design-system-react-components";
 import FormTextInput from "../form/TextInput";
 import Form from "../form";
 import {requiredValidator} from "../form/FormValidators";
+import {loginUser} from "../utilities/http";
+import {User} from "../../Interfaces";
 
 
 interface Props {
-    setAuthenticationToken: any
+    setAuthenticatedUser: (user: User) => void
 }
 
 interface location {
@@ -28,20 +30,32 @@ function SignIn(props: Props): ReactElement {
 
     const {from} = (location as location).state || {from: {pathname: "/"}};
 
-    const {setAuthenticationToken} = props;
+    const {setAuthenticatedUser} = props;
 
-    function signIn(formData: FormData) {
-
+    async function signIn(formData: FormData) {
         setButtonLoading(true);
 
-        if (formData.username === "Blaise") {
+        const [success, user] = await loginUser(formData.username, formData.password);
+
+        if (!success) {
             setButtonLoading(false);
-            setAuthenticationToken("Auth");
-            setRedirect(true);
-        } else {
-            setButtonLoading(false);
-            setMessage("Invalid username or password");
+            setMessage("Unable to verify user credentials.");
+            return;
         }
+
+        if (user === null) {
+            setButtonLoading(false);
+            setMessage("Invalid username or password.");
+            return;
+        }
+
+        setAuthenticatedUser(user);
+        setRedirect(true);
+    }
+
+    function loginAnyway(){
+        setAuthenticatedUser({defaultServerPark: "", name: "TEST_ENV", password: "", role: "", serverParks: []});
+        setRedirect(true);
     }
 
 
@@ -52,7 +66,8 @@ function SignIn(props: Props): ReactElement {
             }
             <h1>Sign in</h1>
 
-            {(message !== "" && <ONSPanel status={"error"}>{message}</ONSPanel>)}
+            {/* TODO Remove the "Sign in anyway" as this just bypasses the Auth*/}
+            {(message !== "" && <ONSPanel status={"error"}>{message} <Link to={"/"} onClick={loginAnyway}>Sign in anyway</Link> </ONSPanel>)}
 
             <Form onSubmit={(data) => signIn(data)}>
 

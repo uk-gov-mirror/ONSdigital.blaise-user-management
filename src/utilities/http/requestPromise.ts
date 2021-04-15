@@ -1,11 +1,11 @@
 type PromiseResponse = [number, any];
 
-function requestPromiseJson(method: string, url: string, body: any = null): Promise<PromiseResponse> {
-    console.log(body);
+function requestPromiseJson(method: string, url: string, body: any = null, headers: any = {}): Promise<PromiseResponse> {
     return new Promise((resolve: (object: PromiseResponse) => void, reject: (error: string) => void) => {
         fetch(url, {
             "method": method,
-            "body": body
+            "body": body,
+            "headers": headers
         })
             .then(async response => {
                 response.json().then(
