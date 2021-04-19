@@ -1,7 +1,6 @@
 import React, {ReactElement, useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {User} from "../../Interfaces";
-import {useLocation} from "react-router-dom";
 import {ExternalLink, ONSErrorPanel} from "blaise-design-system-react-components";
 import {getAllUsers} from "../utilities/http";
 
@@ -36,9 +35,12 @@ function Users({currentUser, externalCATIUrl, updatePanel, panel}: Props): React
         if (updatedPanel.message !== panel.message) {
             updatePanel(updatedPanel.visible, updatedPanel.message, updatedPanel.status);
             getUserList().then(() => console.log("Call getUserList Complete"));
+            setTimeout(function () {
+                updatePanel();
+            }, 10000);
         }
 
-    }, []);
+    }, [updatedPanel]);
 
     useEffect(() => {
         getUserList().then(() => console.log("Call getUserList Complete"));
@@ -50,7 +52,7 @@ function Users({currentUser, externalCATIUrl, updatePanel, panel}: Props): React
         const [success, instrumentList] = await getAllUsers();
 
         if (!success) {
-            setListError("Unable to load users");
+            setListError("Unable to load users.");
             return;
         }
 
@@ -86,74 +88,75 @@ function Users({currentUser, externalCATIUrl, updatePanel, panel}: Props): React
         </p>
         {listError.includes("Unable") && <ONSErrorPanel/>}
 
-        <table id="user-table" className="table u-mt-m">
-            <thead className="table__head u-mt-m">
-            <tr className="table__row">
-                <th scope="col" className="table__header ">
-                    <span>Name</span>
-                </th>
-                <th scope="col" className="table__header ">
-                    <span>Role</span>
-                </th>
-                <th scope="col" className="table__header ">
-                    <span>Default server park</span>
-                </th>
-                {/*<th scope="col" className="table__header ">*/}
-                {/*    <span>Edit user</span>*/}
-                {/*</th>*/}
-                <th scope="col" className="table__header ">
-                    <span>Change password</span>
-                </th>
-                <th scope="col" className="table__header ">
-                    <span>Delete user</span>
-                </th>
-            </tr>
-            </thead>
-            <tbody className="table__body">
-            {
-                users && users.length > 0
-                    ?
-                    users.map((item: User) => {
-                        return (
-                            <tr className="table__row" key={item.name} data-testid={"user-table-row"}>
-                                <td className="table__cell ">
-                                    {item.name}
-                                </td>
-                                <td className="table__cell ">
-                                    {item.role}
-                                </td>
-                                <td className="table__cell ">
-                                    {item.defaultServerPark}
-                                </td>
-                                {/*<td className="table__cell ">*/}
-                                {/*    <Link to={"/survey/" + item.name}>Edit</Link>*/}
-                                {/*</td>*/}
-                                <td className="table__cell ">
-                                    <Link to={"/user/changepassword/" + item.name}>Change password</Link>
-                                </td>
-                                <td className="table__cell ">
-                                    {
-                                        (
-                                            item.name === currentUser.name ?
-                                                "Currently signed in user" :
-                                                <Link to={"/user/delete/" + item.name}>Delete</Link>
-                                        )
-                                    }
-                                </td>
-                            </tr>
-                        );
-                    })
-                    :
-                    <tr>
-                        <td className="table__cell " colSpan={6}>
-                            {listError}
-                        </td>
+        {
+            users && users.length > 0
+                ?
+                <table id="users-table" className="table u-mt-m">
+                    <thead className="table__head ">
+                    <tr className="table__row">
+                        <th scope="col" className="table__header ">
+                            <span>Name</span>
+                        </th>
+                        <th scope="col" className="table__header ">
+                            <span>Role</span>
+                        </th>
+                        <th scope="col" className="table__header ">
+                            <span>Default server park</span>
+                        </th>
+                        {/*<th scope="col" className="table__header ">*/}
+                        {/*    <span>Edit user</span>*/}
+                        {/*</th>*/}
+                        <th scope="col" className="table__header ">
+                            <span>Change password</span>
+                        </th>
+                        <th scope="col" className="table__header ">
+                            <span>Delete user</span>
+                        </th>
                     </tr>
-            }
-            </tbody>
-        </table>
-    </>
-        ;
+                    </thead>
+                    <tbody className="table__body">
+                    {
+                        users.map(({role, defaultServerPark, name}: User) => {
+                            return (
+                                <tr className="table__row" key={name} data-testid={"users-table-row"}>
+                                    <td className="table__cell ">
+                                        {name}
+                                    </td>
+                                    <td className="table__cell ">
+                                        {role}
+                                    </td>
+                                    <td className="table__cell ">
+                                        {defaultServerPark}
+                                    </td>
+                                    {/*<td className="table__cell ">*/}
+                                    {/*    <Link to={"/survey/" + item.name}>Edit</Link>*/}
+                                    {/*</td>*/}
+                                    <td className="table__cell ">
+                                        <Link to={"/user/changepassword/" + name}>Change password</Link>
+                                    </td>
+                                    <td className="table__cell ">
+                                        {
+                                            (
+                                                name === currentUser.name ?
+                                                    "Currently signed in user" :
+                                                    <Link to={"/user/delete/" + name}>Delete</Link>
+                                            )
+                                        }
+                                    </td>
+                                </tr>
+                            );
+                        })
+                    }
+                    </tbody>
+                </table>
+                :
+                <div className="panel panel--info panel--no-title u-mb-m">
+                    <div className="panel__body">
+                        <p>{listError}</p>
+                    </div>
+                </div>
+        }
+    </>;
 }
 
 export default Users;
