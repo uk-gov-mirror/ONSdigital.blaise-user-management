@@ -1,11 +1,7 @@
 import React, {ReactElement, useEffect, useState} from "react";
 import {DefaultErrorBoundary} from "./Components/ErrorHandling/DefaultErrorBoundary";
 import {isDevEnv} from "./Functions";
-import {
-    Switch,
-    Route,
-    Redirect
-} from "react-router-dom";
+import {Switch, Route, Redirect} from "react-router-dom";
 import Users from "./pages/Users";
 import {User} from "../Interfaces";
 import {ErrorBoundary} from "./Components/ErrorHandling/ErrorBoundary";
@@ -14,7 +10,6 @@ import ChangePassword from "./pages/ChangePassword";
 import DeleteUser from "./pages/DeleteUser";
 import SignIn from "./pages/SignIn";
 import NewRole from "./pages/NewRole";
-
 import {NotProductionWarning, Footer, Header, ONSPanel, BetaBanner} from "blaise-design-system-react-components";
 import Roles from "./pages/Roles";
 import BulkUserUpload from "./pages/BulkUserUpload/BulkUserUpload";
@@ -38,7 +33,8 @@ const divStyle = {
 function App(): ReactElement {
 
     const [externalCATIUrl, setExternalCATIUrl] = useState<string>("/Blaise");
-    const [panel, setPanel] = useState<Panel>({visible: false, message: "", status: "info"});
+    const defaultPanel = {visible: false, message: "", status: "info"};
+    const [panel, setPanel] = useState<Panel>(defaultPanel);
 
     const updatePanel = (visible = false, message = "", status = "info") => {
         setPanel(
@@ -58,11 +54,19 @@ function App(): ReactElement {
         setUserAuthenticated(true);
     }
 
-    const [authenticatedUser, setAuthenticatedUser] = useState<User>({
+    function signOutUser() {
+        setAuthenticatedUser(emptyUser);
+        setUserAuthenticated(false);
+    }
+
+
+    const emptyUser: User = {
         defaultServerPark: "",
         password: "",
         serverParks: [],
-        name: "", role: ""});
+        name: "", role: ""
+    };
+    const [authenticatedUser, setAuthenticatedUser] = useState<User>(emptyUser);
     const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
 
@@ -99,7 +103,7 @@ function App(): ReactElement {
                 (window.location.hostname.includes("dev")) && <NotProductionWarning/>
             }
             <BetaBanner/>
-            <Header title={"Blaise User Management"}/>
+            <Header title={"Blaise User Management"} signOutButton={userAuthenticated} signOutFunction={() => signOutUser()}/>
             <div style={divStyle} className="page__container container">
                 <main id="main-content" className="page__main">
                     <ONSPanel hidden={!panel.visible} status={panel.status}>
@@ -126,12 +130,12 @@ function App(): ReactElement {
                                 <Roles/>
                             </PrivateRoute>
                             <Route path="/signin">
-                                <ErrorBoundary errorMessageText={"Unable to load survey table correctly"}>
+                                <ErrorBoundary errorMessageText={"Unable to load survey table correctly."}>
                                     <SignIn setAuthenticatedUser={loginUser}/>
                                 </ErrorBoundary>
                             </Route>
                             <PrivateRoute path="/users">
-                                <ErrorBoundary errorMessageText={"Unable to load user table correctly"}>
+                                <ErrorBoundary errorMessageText={"Unable to load user table correctly."}>
                                     <Users currentUser={authenticatedUser}
                                            externalCATIUrl={externalCATIUrl}
                                            updatePanel={updatePanel}
@@ -139,7 +143,7 @@ function App(): ReactElement {
                                 </ErrorBoundary>
                             </PrivateRoute>
                             <PrivateRoute path="/">
-                            <ErrorBoundary errorMessageText={"Unable to load user table correctly"}>
+                            <ErrorBoundary errorMessageText={"Unable to load user table correctly."}>
                                 <Home user={authenticatedUser}/>
                             </ErrorBoundary>
                         </PrivateRoute>
