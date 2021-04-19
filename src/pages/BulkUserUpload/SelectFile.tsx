@@ -93,7 +93,7 @@ function SelectFile({setUsersToUpload, movePageForward}: Props): ReactElement {
     return (
         <>
             <p className="u-mt-m">
-                <Link to={"/"}>Previous</Link>
+                <Link to={"/users"}>Previous</Link>
             </p>
             <h1>Bulk user upload</h1>
 
