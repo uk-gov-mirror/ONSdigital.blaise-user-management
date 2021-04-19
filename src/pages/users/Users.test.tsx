@@ -1,13 +1,11 @@
 import React from "react";
 import {render, waitFor, cleanup, screen} from "@testing-library/react";
-import App from "../../App";
 import "@testing-library/jest-dom";
-import flushPromises, {loginUser, mock_server_request_Return_JSON} from "../../tests/utils";
+import flushPromises, {mock_server_request_Return_JSON} from "../../tests/utils";
 import {act} from "react-dom/test-utils";
 import {createMemoryHistory} from "history";
 import {Router} from "react-router";
 import {User} from "../../../Interfaces";
-import SignIn from "../SignIn";
 import Users from "./Users";
 
 const signedInUser: User = {
@@ -34,7 +32,7 @@ describe("React homepage", () => {
         const history = createMemoryHistory();
         const wrapper = render(
             <Router history={history}>
-                <Users currentUser={signedInUser} externalCATIUrl={"url/"} panel={panel} updatePanel={jest.fn()}/>
+                <Users currentUser={signedInUser} externalCATIUrl={"url/"}/>
             </Router>
         );
 
@@ -52,7 +50,7 @@ describe("React homepage", () => {
         const history = createMemoryHistory();
         render(
             <Router history={history}>
-                <Users currentUser={signedInUser} externalCATIUrl={"url/"} panel={panel} updatePanel={jest.fn()}/>
+                <Users currentUser={signedInUser} externalCATIUrl={"url/"}/>
             </Router>
         );
 
@@ -86,7 +84,7 @@ describe("Given the API returns malformed json", () => {
         const history = createMemoryHistory();
         render(
             <Router history={history}>
-                <Users currentUser={signedInUser} externalCATIUrl={"url/"} panel={panel} updatePanel={jest.fn()}/>
+                <Users currentUser={signedInUser} externalCATIUrl={"url/"}/>
             </Router>
         );
 
@@ -118,7 +116,7 @@ describe("Given the API returns an empty list", () => {
         const history = createMemoryHistory();
         render(
             <Router history={history}>
-                <Users currentUser={signedInUser} externalCATIUrl={"url/"} panel={panel} updatePanel={jest.fn()}/>
+                <Users currentUser={signedInUser} externalCATIUrl={"url/"}/>
             </Router>
         );
 
