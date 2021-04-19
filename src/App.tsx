@@ -51,6 +51,9 @@ function App(): ReactElement {
     const {updatedPanel} = state || {updatedPanel: panel};
 
     useEffect(() => {
+        if (updatedPanel === null || updatedPanel?.message === undefined) {
+            return;
+        }
         if (updatedPanel.message !== panel.message) {
             updatePanel(updatedPanel.visible, updatedPanel.message, updatedPanel.status);
         }
