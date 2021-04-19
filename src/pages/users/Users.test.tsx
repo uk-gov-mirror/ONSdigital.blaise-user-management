@@ -20,9 +20,7 @@ const userList: User[] = [
     {defaultServerPark: "gusty", name: "SecondUser", role: "BDSS", serverParks: ["gusty"]}
 ];
 
-const panel = {visible: false, message: "", status: "info"};
-
-describe("React homepage", () => {
+describe("Manage Users page", () => {
 
     beforeAll(() => {
         mock_server_request_Return_JSON(200, userList);
