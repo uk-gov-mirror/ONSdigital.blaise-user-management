@@ -2,17 +2,17 @@ import React, {ReactElement, useEffect, useState} from "react";
 import {DefaultErrorBoundary} from "./Components/ErrorHandling/DefaultErrorBoundary";
 import {isDevEnv} from "./Functions";
 import {Switch, Route, Redirect} from "react-router-dom";
-import Users from "./pages/Users";
+import Users from "./pages/users/Users";
 import {User} from "../Interfaces";
 import {ErrorBoundary} from "./Components/ErrorHandling/ErrorBoundary";
-import NewUser from "./pages/NewUser";
-import ChangePassword from "./pages/ChangePassword";
-import DeleteUser from "./pages/DeleteUser";
+import NewUser from "./pages/users/NewUser";
+import ChangePassword from "./pages/users/ChangePassword";
+import DeleteUser from "./pages/users/DeleteUser";
 import SignIn from "./pages/SignIn";
-import NewRole from "./pages/NewRole";
+import NewRole from "./pages/roles/NewRole";
 import {NotProductionWarning, Footer, Header, ONSPanel, BetaBanner} from "blaise-design-system-react-components";
-import Roles from "./pages/Roles";
-import BulkUserUpload from "./pages/BulkUserUpload/BulkUserUpload";
+import Roles from "./pages/roles/Roles";
+import BulkUserUpload from "./pages/users/BulkUserUpload/BulkUserUpload";
 import Home from "./pages/Home";
 
 interface Panel {

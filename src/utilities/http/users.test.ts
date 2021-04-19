@@ -1,16 +1,20 @@
 import {cleanup} from "@testing-library/react";
 import {mock_server_request_function, mock_server_request_Return_JSON} from "../../tests/utils";
 import {getAllUsers} from "./users";
+import {User} from "../../../Interfaces";
 
-
+const userList: User[] = [
+    {defaultServerPark: "gusty", name: "TestUser123", role: "DST", serverParks: ["gusty"]},
+    {defaultServerPark: "gusty", name: "SecondUser", role: "BDSS", serverParks: ["gusty"]}
+];
 
 describe("Function getAllUsers(filename: string) ", () => {
 
     it("It should return true with data if the list is returned successfully", async () => {
-        mock_server_request_Return_JSON(200, []);
+        mock_server_request_Return_JSON(200, userList);
         const [success, users] = await getAllUsers();
         expect(success).toBeTruthy();
-        expect(users).toEqual(users);
+        expect(users).toEqual(userList);
     });
 
     it("It should return true with an empty list if a 404 is returned from the server", async () => {

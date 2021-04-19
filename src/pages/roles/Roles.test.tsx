@@ -1,40 +1,29 @@
 import React from "react";
 import {render, waitFor, cleanup, screen} from "@testing-library/react";
-import App from "../App";
 import "@testing-library/jest-dom";
-import flushPromises, {loginUser, mock_server_request_Return_JSON} from "../tests/utils";
+import flushPromises, {mock_server_request_Return_JSON} from "../../tests/utils";
 import {act} from "react-dom/test-utils";
 import {createMemoryHistory} from "history";
 import {Router} from "react-router";
-import {User} from "../../Interfaces";
-import SignIn from "./SignIn";
-import Users from "./Users";
+import {Role} from "../../../Interfaces";
+import Roles from "./Roles";
 
-const signedInUser: User = {
-    defaultServerPark: "gusty",
-    name: "TestUser123",
-    role: "DST",
-    serverParks: ["gusty"]
-};
-
-const userList: User[] = [
-    {defaultServerPark: "gusty", name: "TestUser123", role: "DST", serverParks: ["gusty"]},
-    {defaultServerPark: "gusty", name: "SecondUser", role: "BDSS", serverParks: ["gusty"]}
+const roleList: Role[] = [
+    {name: "DST", permissions: ["Admin", "Bacon.access"], description: "A role"},
+    {name: "BDSS", permissions: ["Admin"], description: "Another role"}
 ];
 
-const panel = {visible: false, message: "", status: "info"};
-
-describe("React homepage", () => {
+describe("Manage Roles page", () => {
 
     beforeAll(() => {
-        mock_server_request_Return_JSON(200, userList);
+        mock_server_request_Return_JSON(200, roleList);
     });
 
     it("view users page matches Snapshot", async () => {
         const history = createMemoryHistory();
         const wrapper = render(
             <Router history={history}>
-                <Users currentUser={signedInUser} externalCATIUrl={"url/"} panel={panel} updatePanel={jest.fn()}/>
+                <Roles/>
             </Router>
         );
 
@@ -52,7 +41,7 @@ describe("React homepage", () => {
         const history = createMemoryHistory();
         render(
             <Router history={history}>
-                <Users currentUser={signedInUser} externalCATIUrl={"url/"} panel={panel} updatePanel={jest.fn()}/>
+                <Roles/>
             </Router>
         );
 
@@ -61,10 +50,10 @@ describe("React homepage", () => {
         });
 
         await waitFor(() => {
-            expect(screen.getByText(/Manage users/i)).toBeDefined();
-            expect(screen.getByText(/Create new user/i)).toBeDefined();
-            expect(screen.getByText(/TestUser123/i)).toBeDefined();
-            expect(screen.getByText(/SecondUser/i)).toBeDefined();
+            expect(screen.getByText(/Manage roles/i)).toBeDefined();
+            expect(screen.getByText(/Create new role/i)).toBeDefined();
+            expect(screen.getByText(/DST/i)).toBeDefined();
+            expect(screen.getByText(/BDSS/i)).toBeDefined();
             expect(screen.queryByText(/Loading/i)).not.toBeInTheDocument();
         });
     });
@@ -86,7 +75,7 @@ describe("Given the API returns malformed json", () => {
         const history = createMemoryHistory();
         render(
             <Router history={history}>
-                <Users currentUser={signedInUser} externalCATIUrl={"url/"} panel={panel} updatePanel={jest.fn()}/>
+                <Roles/>
             </Router>
         );
 
@@ -118,7 +107,7 @@ describe("Given the API returns an empty list", () => {
         const history = createMemoryHistory();
         render(
             <Router history={history}>
-                <Users currentUser={signedInUser} externalCATIUrl={"url/"} panel={panel} updatePanel={jest.fn()}/>
+                <Roles/>
             </Router>
         );
 
@@ -128,7 +117,7 @@ describe("Given the API returns an empty list", () => {
 
 
         await waitFor(() => {
-            expect(screen.getByText(/No installed users found./i)).toBeDefined();
+            expect(screen.getByText(/No installed roles found./i)).toBeDefined();
             expect(screen.queryByText(/Loading/i)).not.toBeInTheDocument();
         });
 

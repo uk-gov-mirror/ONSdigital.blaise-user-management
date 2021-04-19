@@ -2,8 +2,8 @@ import React, {ReactElement, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {ONSButton} from "blaise-design-system-react-components";
 import CSVReader from "react-csv-reader";
-import {ImportUser, Role} from "../../../Interfaces";
-import {getAllRoles} from "../../utilities/http";
+import {ImportUser, Role} from "../../../../Interfaces";
+import {getAllRoles} from "../../../utilities/http";
 
 interface Props {
     setUsersToUpload: (users: ImportUser[]) => void

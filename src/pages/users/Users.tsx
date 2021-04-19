@@ -1,8 +1,8 @@
 import React, {ReactElement, useEffect, useState} from "react";
 import {Link, useLocation} from "react-router-dom";
-import {User} from "../../Interfaces";
+import {User} from "../../../Interfaces";
 import {ExternalLink, ONSErrorPanel} from "blaise-design-system-react-components";
-import {getAllUsers} from "../utilities/http";
+import {getAllUsers} from "../../utilities/http";
 
 interface Props {
     currentUser: User

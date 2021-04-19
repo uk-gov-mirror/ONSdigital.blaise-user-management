@@ -1,11 +1,11 @@
 import React, {ChangeEvent,  ReactElement, useEffect, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
 import {ONSPanel, ONSButton} from "blaise-design-system-react-components";
-import {addNewUser, getAllRoles} from "../utilities/http";
-import {Role, User} from "../../Interfaces";
-import FormTextInput from "../form/TextInput";
-import Form from "../form";
-import {passwordMatchedValidator, requiredValidator} from "../form/FormValidators";
+import {addNewUser, getAllRoles} from "../../utilities/http";
+import {Role, User} from "../../../Interfaces";
+import FormTextInput from "../../form/TextInput";
+import Form from "../../form";
+import {passwordMatchedValidator, requiredValidator} from "../../form/FormValidators";
 
 function NewUser(): ReactElement {
     const [buttonLoading, setButtonLoading] = useState<boolean>(false);

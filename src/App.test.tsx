@@ -7,6 +7,7 @@ import {act} from "react-dom/test-utils";
 import {createMemoryHistory} from "history";
 import {Router} from "react-router";
 import {User} from "../Interfaces";
+import {fireEvent} from "@testing-library/dom";
 
 const userReturned: User = {
     defaultServerPark: "gusty",
@@ -43,6 +44,38 @@ describe("React homepage", () => {
             expect(wrapper).toMatchSnapshot();
         });
 
+    });
+
+    it("the sign in and sign out correctly", async () => {
+        const history = createMemoryHistory();
+        render(
+            <Router history={history}>
+                <App/>
+            </Router>
+        );
+
+        await loginUser();
+
+        await act(async () => {
+            await flushPromises();
+        });
+
+        await waitFor(() => {
+            expect(screen.getByText(/TestUser123/i)).toBeDefined();
+            expect(screen.getByText(/DST/i)).toBeDefined();
+            expect(screen.getByText(/Manage users/i)).toBeDefined();
+            expect(screen.getByText(/Manage roles/i)).toBeDefined();
+        });
+
+        await act(async () => {
+            fireEvent.click(screen.getByText(/Save and sign out/i));
+            await flushPromises();
+        });
+
+        await waitFor(() => {
+            expect(screen.queryAllByText(/Sign in/i)).toHaveLength(2);
+            expect(screen.getByText(/username/i)).toBeDefined();
+        });
     });
 
     it("should render correctly", async () => {
