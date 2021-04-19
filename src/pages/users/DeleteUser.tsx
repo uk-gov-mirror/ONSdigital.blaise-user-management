@@ -1,6 +1,7 @@
 import React, {ReactElement, useState} from "react";
 import {Link, Redirect, useParams} from "react-router-dom";
 import {ONSButton, ONSPanel} from "blaise-design-system-react-components";
+import {deleteUser} from "../../utilities/http";
 
 
 interface ReturnPanel {
@@ -22,7 +23,7 @@ function DeleteUser(): ReactElement {
     const [returnPanel, setReturnPanel] = useState<ReturnPanel>({visible: false, message: "", status: "info"});
     const {user}: Parmas = useParams();
 
-    function deleteUser() {
+    async function deleteUserConfirm() {
 
         if (!confirm) {
             setRedirect(true);
@@ -30,29 +31,17 @@ function DeleteUser(): ReactElement {
             return;
         }
 
-        setButtonLoading(true);
-        fetch("/api/users", {
-            "method": "delete",
-            "headers": {
-                "user": user,
-            }
-        }).then((r: Response) => {
-            if (r.status === 204) {
-                setButtonLoading(false);
-                setMessage("");
-                setReturnPanel({visible: true, message: "User " + user + " deleted", status: "success"});
-                setRedirect(true);
-            } else {
-                console.error("Failed to retrieve instrument list, status " + r.status);
-                setMessage("Set password failed");
-                setButtonLoading(false);
-            }
-        }).catch(() => {
-                console.error("Failed to retrieve instrument list");
-                setMessage("Set password failed");
-                setButtonLoading(false);
-            }
-        );
+        const created = await deleteUser(user);
+
+        if (!created) {
+            console.error("Failed to delete user");
+            setMessage("Failed to delete user");
+            setButtonLoading(false);
+            return;
+        }
+
+        setReturnPanel({visible: true, message: "User " + user + " deleted", status: "success"});
+        setRedirect(true);
     }
 
     return (
@@ -70,7 +59,7 @@ function DeleteUser(): ReactElement {
                 {message}
             </ONSPanel>
 
-            <form onSubmit={() => deleteUser()}>
+            <form onSubmit={() => deleteUserConfirm()}>
                 <fieldset className="fieldset">
                     <legend className="fieldset__legend">
                     </legend>
@@ -115,7 +104,7 @@ function DeleteUser(): ReactElement {
                     label={"Save"}
                     primary={true}
                     loading={buttonLoading}
-                    onClick={() => deleteUser()}/>
+                    onClick={() => deleteUserConfirm()}/>
             </form>
         </>
     );

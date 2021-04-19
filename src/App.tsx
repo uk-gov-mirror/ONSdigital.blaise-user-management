@@ -64,9 +64,6 @@ function App(): ReactElement {
         setPanel(
             {visible: visible, message: message, status: status}
         );
-        setTimeout(function () {
-            updatePanel();
-        }, 10000);
     };
 
 

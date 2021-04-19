@@ -49,4 +49,29 @@ function addNewUser(newUser: User): Promise<boolean> {
     });
 }
 
-export {getAllUsers, addNewUser};
+function deleteUser(username: string): Promise<boolean> {
+    console.log("Call to deleteUser");
+
+    const url = "/api/users";
+
+    const headers = {
+        "user": username,
+    };
+
+    return new Promise((resolve: (object: boolean) => void) => {
+
+        requestPromiseJson("DELETE", url, null, headers).then(([status, data]) => {
+            console.log(`Response from add new user: Status ${status}, data ${data}`);
+            if (status === 204) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        }).catch((error: Error) => {
+            console.error(`Response from add new user Failed: Error ${error}`);
+            resolve(false);
+        });
+    });
+}
+
+export {getAllUsers, addNewUser, deleteUser};

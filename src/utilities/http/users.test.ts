@@ -1,6 +1,6 @@
 import {cleanup} from "@testing-library/react";
 import {mock_server_request_function, mock_server_request_Return_JSON} from "../../tests/utils";
-import {addNewUser, getAllUsers} from "./users";
+import {addNewUser, deleteUser, getAllUsers} from "./users";
 import {User} from "../../../Interfaces";
 
 const userList: User[] = [
@@ -83,8 +83,6 @@ describe("Function addNewUser(user: User) ", () => {
         expect(success).toBeTruthy();
     });
 
-
-
     it("It should return false if a password is not provided", async () => {
         mock_server_request_Return_JSON(201, {});
         const newUser: User = {
@@ -118,6 +116,44 @@ describe("Function addNewUser(user: User) ", () => {
             })
         ));
         const success = await addNewUser(newUser);
+        expect(success).toBeFalsy();
+    });
+
+    afterAll(() => {
+        jest.clearAllMocks();
+        cleanup();
+    });
+});
+
+describe("Function deleteUser(username: string) ", () => {
+
+    const userToDelete = "dave01";
+
+    it("It should return true if the user has been deleted successfully", async () => {
+        mock_server_request_Return_JSON(204, {});
+        const success = await deleteUser(userToDelete);
+        expect(success).toBeTruthy();
+    });
+
+    it("It should return false if a 404 is returned from the server", async () => {
+        mock_server_request_Return_JSON(404, []);
+        const success = await deleteUser(userToDelete);
+        expect(success).toBeFalsy();
+    });
+
+    it("It should return false if request returns an error code", async () => {
+        mock_server_request_Return_JSON(500, {});
+        const success = await deleteUser(userToDelete);
+        expect(success).toBeFalsy();
+    });
+
+    it("It should return false if request call fails", async () => {
+        mock_server_request_function(jest.fn(() =>
+            Promise.resolve(() => {
+                throw "error";
+            })
+        ));
+        const success = await deleteUser(userToDelete);
         expect(success).toBeFalsy();
     });
 
