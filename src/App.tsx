@@ -1,7 +1,7 @@
 import React, {ReactElement, useEffect, useState} from "react";
 import {DefaultErrorBoundary} from "./Components/ErrorHandling/DefaultErrorBoundary";
 import {isDevEnv} from "./Functions";
-import {Switch, Route, Redirect} from "react-router-dom";
+import {Switch, Route, Redirect, useLocation} from "react-router-dom";
 import Users from "./pages/users/Users";
 import {User} from "../Interfaces";
 import {ErrorBoundary} from "./Components/ErrorHandling/ErrorBoundary";
@@ -30,16 +30,40 @@ const divStyle = {
     minHeight: "calc(67vh)"
 };
 
+interface Panel {
+    visible: boolean
+    message: string
+    status: string
+}
+
+
+interface location {
+    state: any
+}
+
 function App(): ReactElement {
 
     const [externalCATIUrl, setExternalCATIUrl] = useState<string>("/Blaise");
     const defaultPanel = {visible: false, message: "", status: "info"};
     const [panel, setPanel] = useState<Panel>(defaultPanel);
 
+    const {state}: location = useLocation();
+    const {updatedPanel} = state || {updatedPanel: panel};
+
+    useEffect(() => {
+        if (updatedPanel.message !== panel.message) {
+            updatePanel(updatedPanel.visible, updatedPanel.message, updatedPanel.status);
+        }
+
+    }, [updatedPanel]);
+
     const updatePanel = (visible = false, message = "", status = "info") => {
         setPanel(
             {visible: visible, message: message, status: status}
         );
+        setTimeout(function () {
+            updatePanel();
+        }, 10000);
     };
 
 
@@ -52,11 +76,13 @@ function App(): ReactElement {
     function loginUser(user: User) {
         setAuthenticatedUser(user);
         setUserAuthenticated(true);
+        updatePanel();
     }
 
     function signOutUser() {
         setAuthenticatedUser(emptyUser);
         setUserAuthenticated(false);
+        updatePanel(true, "Successfully signed out", "success");
     }
 
 
@@ -127,7 +153,9 @@ function App(): ReactElement {
                                 <NewRole/>
                             </PrivateRoute>
                             <PrivateRoute path={"/roles"}>
-                                <Roles/>
+                                <ErrorBoundary errorMessageText={"Unable to load role table correctly."}>
+                                    <Roles/>
+                                </ErrorBoundary>
                             </PrivateRoute>
                             <Route path="/signin">
                                 <ErrorBoundary errorMessageText={"Unable to load survey table correctly."}>
@@ -137,9 +165,7 @@ function App(): ReactElement {
                             <PrivateRoute path="/users">
                                 <ErrorBoundary errorMessageText={"Unable to load user table correctly."}>
                                     <Users currentUser={authenticatedUser}
-                                           externalCATIUrl={externalCATIUrl}
-                                           updatePanel={updatePanel}
-                                           panel={panel}/>
+                                           externalCATIUrl={externalCATIUrl}/>
                                 </ErrorBoundary>
                             </PrivateRoute>
                             <PrivateRoute path="/">

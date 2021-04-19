@@ -1,5 +1,5 @@
 import React, {ReactElement, useEffect, useState} from "react";
-import {Link, useLocation} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {User} from "../../../Interfaces";
 import {ExternalLink, ONSErrorPanel} from "blaise-design-system-react-components";
 import {getAllUsers} from "../../utilities/http";
@@ -7,40 +7,11 @@ import {getAllUsers} from "../../utilities/http";
 interface Props {
     currentUser: User
     externalCATIUrl: string
-    updatePanel: any
-    panel: Panel
 }
 
-interface Panel {
-    visible: boolean
-    message: string
-    status: string
-}
-
-
-interface location {
-    state: any
-}
-
-function Users({currentUser, externalCATIUrl, updatePanel, panel}: Props): ReactElement {
-    const {state}: location = useLocation();
-    const {updatedPanel} = state || {updatedPanel: null};
+function Users({currentUser, externalCATIUrl}: Props): ReactElement {
     const [users, setUsers] = useState<User[]>([]);
     const [listError, setListError] = useState<string>("Loading ...");
-
-    useEffect(() => {
-        if (updatedPanel === null) {
-            return;
-        }
-        if (updatedPanel.message !== panel.message) {
-            updatePanel(updatedPanel.visible, updatedPanel.message, updatedPanel.status);
-            getUserList().then(() => console.log("Call getUserList Complete"));
-            setTimeout(function () {
-                updatePanel();
-            }, 10000);
-        }
-
-    }, [updatedPanel]);
 
     useEffect(() => {
         getUserList().then(() => console.log("Call getUserList Complete"));
