@@ -35,7 +35,7 @@ function Roles(): ReactElement {
         const [success, roleList] = await getAllRoles();
 
         if (!success) {
-            setListError("Unable to load roles");
+            setListError("Unable to load roles.");
             return;
         }
 
@@ -55,7 +55,7 @@ function Roles(): ReactElement {
             <ONSPanel hidden={!panel.visible} status={panel.status}>
                 <p>{panel.message}</p>
             </ONSPanel>
-            <ErrorBoundary errorMessageText={"Unable to load role table correctly"}>
+            <ErrorBoundary errorMessageText={"Unable to load role table correctly."}>
                 <RoleList list={roles}
                           listError={listError}/>
             </ErrorBoundary>

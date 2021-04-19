@@ -70,7 +70,7 @@ function NewRole() {
                     state: {updatedPanel: {visible: true, message: "Role " + name + " created", status: "success"} }
                 }}/>
             }
-            <p>
+            <p className="u-mt-m">
                 <Link to={"/roles"}>Previous</Link>
             </p>
             <h1>Create new role</h1>

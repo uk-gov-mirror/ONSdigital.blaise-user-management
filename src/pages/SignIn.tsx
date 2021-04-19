@@ -64,7 +64,7 @@ function SignIn(props: Props): ReactElement {
             {
                 redirect && <Redirect to={from}/>
             }
-            <h1>Sign in</h1>
+            <h1 className="u-mt-m">Sign in</h1>
 
             {/* TODO Remove the "Sign in anyway" as this just bypasses the Auth*/}
             {(message !== "" && <ONSPanel status={"error"}>{message} <Link to={"/"} onClick={loginAnyway}>Sign in anyway</Link> </ONSPanel>)}
