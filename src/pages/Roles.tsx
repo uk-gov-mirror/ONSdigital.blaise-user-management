@@ -1,9 +1,8 @@
 import React, {ReactElement, useEffect, useState} from "react";
-import {DefaultErrorBoundary} from "../Components/ErrorHandling/DefaultErrorBoundary";
 import {Role} from "../../Interfaces";
 import {ErrorBoundary} from "../Components/ErrorHandling/ErrorBoundary";
 import {getAllRoles} from "../utilities/http";
-import {NotProductionWarning, Footer, Header, ONSPanel, BetaBanner} from "blaise-design-system-react-components";
+import {ONSPanel} from "blaise-design-system-react-components";
 import RoleList from "../Components/RoleList";
 
 interface Panel {

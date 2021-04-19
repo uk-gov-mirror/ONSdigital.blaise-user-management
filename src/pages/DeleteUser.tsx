@@ -14,7 +14,7 @@ interface Parmas {
 }
 
 
-function DeleteUser() : ReactElement {
+function DeleteUser(): ReactElement {
     const [buttonLoading, setButtonLoading] = useState<boolean>(false);
     const [confirm, setConfirm] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");

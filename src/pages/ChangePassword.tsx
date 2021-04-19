@@ -1,16 +1,13 @@
-import React, {useState} from "react";
+import React, {ReactElement, useState} from "react";
 import {Link, Redirect, useParams} from "react-router-dom";
-import {isDevEnv} from "../Functions";
 import {ONSButton, ONSPanel, ONSPasswordInput} from "blaise-design-system-react-components";
-
-
 
 interface Parmas {
     user: string
 }
 
 
-function ChangePassword() {
+function ChangePassword(): ReactElement  {
     // We can use the `useParams` hook here to access
     // the dynamic pieces of the URL.
     const {user}: Parmas = useParams();

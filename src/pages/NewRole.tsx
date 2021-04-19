@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {ReactElement, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
 import {isDevEnv} from "../Functions";
 import {ONSTextInput, ONSButton, ONSPanel} from "blaise-design-system-react-components";
 
 
 
-function NewRole() {
+function NewRole(): ReactElement {
     const [buttonLoading, setButtonLoading] = useState<boolean>(false);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
