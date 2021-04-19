@@ -1,7 +1,8 @@
 import React, {ReactElement, useState} from "react";
 import {Link, Redirect} from "react-router-dom";
-import {isDevEnv} from "../../Functions";
 import {ONSTextInput, ONSButton, ONSPanel} from "blaise-design-system-react-components";
+import {Role} from "../../../Interfaces";
+import {addNewRole} from "../../utilities/http";
 
 
 
@@ -12,7 +13,7 @@ function NewRole(): ReactElement {
     const [message, setMessage] = useState<string>("");
     const [redirect, setRedirect] = useState<boolean>(false);
 
-    function createNewUser() {
+    async function createNewUser() {
         if (name === "") {
             setMessage("Name cannot be blank");
             return;
@@ -23,42 +24,23 @@ function NewRole(): ReactElement {
             return;
         }
 
-        const formData = new FormData();
-        formData.append("name", name);
-        formData.append("description", description);
+        const newRole: Role = {
+            permissions: [],
+            name: name,
+            description: description
+        };
 
         setButtonLoading(true);
-        fetch("/api/roles", {
-            "method": "POST",
-            "body": formData,
-        },)
-            .then((r: Response) => {
-                if (r.status === 201) {
-                    r.json()
-                        .then((json) => {
-                                console.log("Retrieved users list, " + json.length + " items/s");
-                                isDevEnv() && console.log(json);
-                                setButtonLoading(false);
-                                setMessage(json.toString);
-                                setRedirect(true);
-                                return;
-                            }
-                        ).catch(() => {
-                        console.error("Unable to read json from response");
-                        setMessage("Create role failed");
-                        setButtonLoading(false);
-                    });
-                } else {
-                    console.error("Failed to retrieve instrument list, status " + r.status);
-                    setMessage("Create role failed");
-                    setButtonLoading(false);
-                }
-            }).catch(() => {
-                console.error("Failed to retrieve instrument list");
-                setMessage("Create role failed");
-                setButtonLoading(false);
-            }
-        );
+        const created = await addNewRole(newRole);
+
+        if (!created) {
+            console.error("Failed to create new role");
+            setMessage("Failed to create new role");
+            setButtonLoading(false);
+            return;
+        }
+
+        setRedirect(true);
     }
 
 

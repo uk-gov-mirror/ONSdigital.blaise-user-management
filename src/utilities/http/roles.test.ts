@@ -1,6 +1,6 @@
 import {cleanup} from "@testing-library/react";
 import {mock_server_request_function, mock_server_request_Return_JSON} from "../../tests/utils";
-import {getAllRoles} from "./roles";
+import {addNewRole, getAllRoles} from "./roles";
 import {Role} from "../../../Interfaces";
 
 const roleList: Role[] = [
@@ -8,7 +8,8 @@ const roleList: Role[] = [
     {name: "BDSS", permissions: ["Admin"], description: "Another role"}
 ];
 
-describe("Function getAllUsers(filename: string) ", () => {
+
+describe("Function getAllRoles() ", () => {
 
     it("It should return true with data if the list is returned successfully", async () => {
         mock_server_request_Return_JSON(200, roleList);
@@ -66,3 +67,48 @@ describe("Function getAllUsers(filename: string) ", () => {
         cleanup();
     });
 });
+
+
+describe("Function addNewRole(user: User) ", () => {
+
+    const newRole: Role = {
+    permissions: [],
+    name: "New Role",
+    description: "This is a new role"
+};
+
+    it("It should return true if the role has been created successfully", async () => {
+        mock_server_request_Return_JSON(201, {});
+        const success = await addNewRole(newRole);
+        expect(success).toBeTruthy();
+    });
+
+    it("It should return false if a 404 is returned from the server", async () => {
+        mock_server_request_Return_JSON(404, []);
+        const success = await addNewRole(newRole);
+        expect(success).toBeFalsy();
+    });
+
+    it("It should return false if request returns an error code", async () => {
+        mock_server_request_Return_JSON(500, {});
+        const success = await addNewRole(newRole);
+        expect(success).toBeFalsy();
+    });
+
+    it("It should return false if request call fails", async () => {
+        mock_server_request_function(jest.fn(() =>
+            Promise.resolve(() => {
+                throw "error";
+            })
+        ));
+        const success = await addNewRole(newRole);
+        expect(success).toBeFalsy();
+    });
+
+    afterAll(() => {
+        jest.clearAllMocks();
+        cleanup();
+    });
+});
+
+
